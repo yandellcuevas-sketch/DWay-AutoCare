@@ -4,6 +4,10 @@ import { getServerSession } from "next-auth";
 import bcrypt from "bcryptjs";
 import { prisma } from "./prisma";
 
+if (!process.env.NEXTAUTH_URL && process.env.RENDER_EXTERNAL_URL) {
+  process.env.NEXTAUTH_URL = process.env.RENDER_EXTERNAL_URL;
+}
+
 const MAX_LOGIN_ATTEMPTS = 5;
 const LOCKOUT_MINUTES = 15;
 
