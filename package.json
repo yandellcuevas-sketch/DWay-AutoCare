@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "node scripts/prepare-db-schema.mjs && prisma generate && next build",
-    "build:render": "node scripts/prepare-db-schema.mjs && prisma generate && prisma migrate deploy && next build",
+    "build:render": "node scripts/prepare-db-schema.mjs && prisma generate && prisma migrate deploy && node scripts/seed-if-empty.mjs && next build",
     "start": "next start -H 0.0.0.0",
     "lint": "next lint",
     "db:generate": "prisma generate",
