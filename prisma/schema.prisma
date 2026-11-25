@@ -1,0 +1,571 @@
+// DWay AutoCare — Prisma Schema (SQLite local, compatible 1:1 with PostgreSQL migration)
+// Para migrar a PostgreSQL: cambiar provider = "postgresql" y actualizar DATABASE_URL.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────────────────────────
+// USERS, AUTH & VEHICLES
+// Roles: ADMIN | RECEPTIONIST | TECHNICIAN | CLIENT
+// FuelType: GASOLINA | DIESEL | ELECTRICO | HIBRIDO | GLP
+// ServiceMode: WORKSHOP | HOME_SERVICE
+// AppointmentStatus: PENDING_CONFIRMATION | CONFIRMED | TECHNICIAN_EN_ROUTE | CLIENT_RECEIVED | IN_PROGRESS | COMPLETED | RESCHEDULED | CANCELLED | NO_SHOW
+// ─────────────────────────────────────────────
+
+model User {
+  id                  String    @id @default(cuid())
+  email               String    @unique
+  passwordHash        String
+  name                String
+  firstName           String
+  lastName            String
+  phone               String?
+  role                String    @default("CLIENT")
+  isActive            Boolean   @default(true)
+  termsAcceptedAt     DateTime?
+  loginAttempts       Int       @default(0)
+  lockedUntil         DateTime?
+  resetTokenHash      String?
+  resetTokenExpiresAt DateTime?
+  internalNotes       String?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  vehicles                 Vehicle[]
+  addresses                Address[]
+  technician               Technician?
+  clientAppointments       Appointment[]              @relation("ClientAppointments")
+  statusHistoryChanges     AppointmentStatusHistory[] @relation("StatusChangedBy")
+  maintenanceRecordsClient MaintenanceRecord[]        @relation("MaintenanceClient")
+  subscriptions            Subscription[]
+  payments                 Payment[]
+  notifications            Notification[]
+  auditLogs                AuditLog[]
+
+  @@index([email])
+  @@index([role])
+  @@index([isActive])
+}
+
+model Vehicle {
+  id                  String    @id @default(cuid())
+  clientId            String
+  companyId           String?
+  brand               String
+  model               String
+  year                Int
+  plate               String    @unique
+  color               String
+  fuelType            String    // GASOLINA | DIESEL | ELECTRICO | HIBRIDO | GLP
+  mileage             Int
+  lastMaintenanceDate DateTime?
+  notes               String?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  client             User                @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  company            Company?            @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  appointments       Appointment[]
+  maintenanceRecords MaintenanceRecord[]
+  subscriptions      Subscription[]
+
+  @@index([clientId])
+  @@index([companyId])
+  @@index([plate])
+}
+
+model Address {
+  id                     String   @id @default(cuid())
+  userId                 String
+  label                  String
+  province               String
+  municipality           String
+  sector                 String
+  street                 String
+  number                 String
+  reference              String?
+  additionalInstructions String?
+  latitude               Float?
+  longitude              Float?
+  isDefault              Boolean  @default(false)
+  createdAt              DateTime @default(now())
+
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  appointments Appointment[]
+
+  @@index([userId])
+  @@index([userId, isDefault])
+}
+
+model CoverageZone {
+  id                String   @id @default(cuid())
+  province          String
+  municipality      String
+  sector            String
+  travelTimeMinutes Int      @default(30)
+  surchargeFee      Decimal  @default(0)
+  isActive          Boolean  @default(true)
+  createdAt         DateTime @default(now())
+
+  @@unique([province, municipality, sector])
+  @@index([isActive])
+  @@index([sector])
+}
+
+// ─────────────────────────────────────────────
+// SERVICES CATALOG
+// ─────────────────────────────────────────────
+
+model Service {
+  id                  String   @id @default(cuid())
+  slug                String   @unique
+  category            String
+  name                String
+  description         String
+  price               Decimal  // Workshop base price (sin ITBIS)
+  homePrice           Decimal? // Home service base price (sin ITBIS), null if workshop only
+  estimatedDuration   Int      // in minutes
+  isAvailableWorkshop Boolean  @default(true)
+  isAvailableHome     Boolean  @default(false)
+  requiresLift        Boolean  @default(false)
+  isActive            Boolean  @default(true)
+  imageUrl            String?
+  iconName            String?
+  conditions          String?
+  sortOrder           Int      @default(0)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  appointmentServices AppointmentService[]
+
+  @@index([isActive])
+  @@index([isAvailableWorkshop])
+  @@index([isAvailableHome])
+  @@index([sortOrder])
+}
+
+// ─────────────────────────────────────────────
+// OPERATIONS: TECHNICIANS, RESOURCES & SCHEDULES
+// ─────────────────────────────────────────────
+
+model Technician {
+  id                 String   @id @default(cuid())
+  userId             String   @unique
+  specializations    String   // JSON-encoded list of specializations
+  canDriveMobileUnit Boolean  @default(false)
+  isActive           Boolean  @default(true)
+  createdAt          DateTime @default(now())
+
+  user               User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workSchedules      WorkSchedule[]
+  blockedSlots       BlockedSlot[]
+  appointments       Appointment[]
+  maintenanceRecords MaintenanceRecord[]
+
+  @@index([isActive])
+  @@index([canDriveMobileUnit])
+}
+
+model WorkshopResource {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  type      String   // HYDRAULIC_LIFT | SERVICE_BAY
+  capacity  Int      @default(1)
+  isActive  Boolean  @default(true)
+  notes     String?
+  createdAt DateTime @default(now())
+
+  appointments Appointment[]
+  blockedSlots BlockedSlot[]
+
+  @@index([isActive])
+  @@index([type])
+}
+
+model MobileUnit {
+  id             String   @id @default(cuid())
+  name           String   @unique
+  plate          String   @unique
+  vehicleModel   String
+  equipmentNotes String?
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+
+  appointments Appointment[]
+  blockedSlots BlockedSlot[]
+
+  @@index([isActive])
+}
+
+model WorkSchedule {
+  id           String  @id @default(cuid())
+  technicianId String
+  dayOfWeek    Int     // 0 = Sunday, 1 = Monday ... 6 = Saturday
+  startTime    String  // e.g. "08:00"
+  endTime      String  // e.g. "17:00"
+  isActive     Boolean @default(true)
+
+  technician Technician @relation(fields: [technicianId], references: [id], onDelete: Cascade)
+
+  @@index([technicianId])
+  @@index([technicianId, dayOfWeek])
+}
+
+model BlockedSlot {
+  id           String   @id @default(cuid())
+  technicianId String?
+  resourceId   String?
+  mobileUnitId String?
+  date         DateTime
+  startTime    String
+  endTime      String
+  reason       String?
+  createdAt    DateTime @default(now())
+
+  technician Technician?       @relation(fields: [technicianId], references: [id], onDelete: SetNull)
+  resource   WorkshopResource? @relation(fields: [resourceId], references: [id], onDelete: SetNull)
+  mobileUnit MobileUnit?       @relation(fields: [mobileUnitId], references: [id], onDelete: SetNull)
+
+  @@index([technicianId])
+  @@index([resourceId])
+  @@index([mobileUnitId])
+  @@index([date])
+}
+
+model Holiday {
+  id          String   @id @default(cuid())
+  date        DateTime
+  name        String
+  isRecurring Boolean  @default(false)
+
+  @@index([date])
+}
+
+// ─────────────────────────────────────────────
+// APPOINTMENTS & MAINTENANCE HISTORY
+// ─────────────────────────────────────────────
+
+model Appointment {
+  id                    String   @id @default(cuid())
+  bookingCode           String   @unique
+  clientId              String
+  vehicleId             String
+  addressId             String?
+  companyId             String?
+  mode                  String   // WORKSHOP | HOME_SERVICE
+  appointmentDate       DateTime
+  endDate               DateTime
+  estimatedDuration     Int      // in minutes
+  status                String   @default("PENDING_CONFIRMATION")
+  notes                 String?
+  technicianId          String?
+  resourceId            String?
+  mobileUnitId          String?
+  subscriptionId        String?
+  membershipBenefitUsed String?  // REVIEW | BATTERY_TEST | DIAGNOSTIC | OIL_CHANGE
+  promotionCode         String?
+  subtotalAmount        Decimal  @default(0)
+  discountAmount        Decimal  @default(0)
+  travelFee             Decimal  @default(0)
+  taxAmount             Decimal  @default(0)
+  totalAmount           Decimal  @default(0)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  client              User                       @relation("ClientAppointments", fields: [clientId], references: [id], onDelete: Restrict)
+  vehicle             Vehicle                    @relation(fields: [vehicleId], references: [id], onDelete: Restrict)
+  address             Address?                   @relation(fields: [addressId], references: [id], onDelete: SetNull)
+  company             Company?                   @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  technician          Technician?                @relation(fields: [technicianId], references: [id], onDelete: SetNull)
+  resource            WorkshopResource?          @relation(fields: [resourceId], references: [id], onDelete: SetNull)
+  mobileUnit          MobileUnit?                @relation(fields: [mobileUnitId], references: [id], onDelete: SetNull)
+  subscription        Subscription?              @relation(fields: [subscriptionId], references: [id], onDelete: SetNull)
+  appointmentServices AppointmentService[]
+  statusHistory       AppointmentStatusHistory[]
+  maintenanceRecord   MaintenanceRecord?
+  payments            Payment[]
+
+  @@index([clientId])
+  @@index([vehicleId])
+  @@index([technicianId])
+  @@index([resourceId])
+  @@index([mobileUnitId])
+  @@index([addressId])
+  @@index([companyId])
+  @@index([status])
+  @@index([appointmentDate])
+  @@index([bookingCode])
+}
+
+model AppointmentService {
+  id                    String  @id @default(cuid())
+  appointmentId         String
+  serviceId             String
+  price                 Decimal
+  duration              Int     @default(30)
+  usedMembershipBenefit Boolean @default(false)
+  notes                 String?
+
+  appointment Appointment @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+  service     Service     @relation(fields: [serviceId], references: [id], onDelete: Restrict)
+
+  @@index([appointmentId])
+  @@index([serviceId])
+}
+
+model AppointmentStatusHistory {
+  id            String   @id @default(cuid())
+  appointmentId String
+  status        String
+  changedById   String
+  changedAt     DateTime @default(now())
+  notes         String?
+
+  appointment Appointment @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+  changedBy   User        @relation("StatusChangedBy", fields: [changedById], references: [id], onDelete: Restrict)
+
+  @@index([appointmentId])
+  @@index([changedById])
+  @@index([changedAt])
+}
+
+model MaintenanceRecord {
+  id                 String    @id @default(cuid())
+  appointmentId      String    @unique
+  vehicleId          String
+  clientId           String
+  technicianId       String
+  receiptNumber      String    @unique
+  serviceDate        DateTime
+  mileageAtService   Int
+  servicesPerformed  String    // JSON-encoded list
+  productsUsed       String?   // JSON-encoded list
+  checklistJson      String?   // JSON-encoded quality checklist
+  totalCost          Decimal
+  observations       String?
+  recommendations    String?
+  nextServiceDate    DateTime?
+  nextServiceMileage Int?
+  warrantyExpiresAt  DateTime?
+  createdAt          DateTime  @default(now())
+
+  appointment Appointment @relation(fields: [appointmentId], references: [id], onDelete: Restrict)
+  vehicle     Vehicle     @relation(fields: [vehicleId], references: [id], onDelete: Restrict)
+  client      User        @relation("MaintenanceClient", fields: [clientId], references: [id], onDelete: Restrict)
+  technician  Technician  @relation(fields: [technicianId], references: [id], onDelete: Restrict)
+
+  @@index([vehicleId])
+  @@index([clientId])
+  @@index([technicianId])
+  @@index([serviceDate])
+}
+
+// ─────────────────────────────────────────────
+// MEMBERSHIPS, PROMOTIONS, COMPANIES & PAYMENTS
+// ─────────────────────────────────────────────
+
+model MembershipPlan {
+  id                   String  @id @default(cuid())
+  slug                 String  @unique
+  name                 String
+  monthlyPrice         Decimal // sin ITBIS
+  annualPrice          Decimal // sin ITBIS
+  description          String
+  targetMode           String  // "Centro" | "A domicilio"
+  includedReviews      Int     @default(0)
+  includedBatteryTests Int     @default(0)
+  includedDiagnostics  Int     @default(0)
+  includedOilChanges   Int     @default(0)
+  discountPercent      Int     @default(0)
+  benefits             String  // JSON-encoded list of benefits
+  restrictions         String  // JSON-encoded list of restrictions
+  isActive             Boolean @default(true)
+  sortOrder            Int     @default(0)
+
+  subscriptions Subscription[]
+
+  @@index([isActive])
+}
+
+model Subscription {
+  id               String   @id @default(cuid())
+  clientId         String
+  vehicleId        String?
+  planId           String
+  billingCycle     String   @default("MONTHLY") // MONTHLY | ANNUAL
+  status           String   @default("PENDING") // ACTIVE | EXPIRED | CANCELLED | PENDING
+  startDate        DateTime
+  endDate          DateTime
+  autoRenew        Boolean  @default(true)
+  reviewsUsed      Int      @default(0)
+  batteryTestsUsed Int      @default(0)
+  diagnosticsUsed  Int      @default(0)
+  oilChangesUsed   Int      @default(0)
+  createdAt        DateTime @default(now())
+
+  client       User           @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  vehicle      Vehicle?       @relation(fields: [vehicleId], references: [id], onDelete: SetNull)
+  plan         MembershipPlan @relation(fields: [planId], references: [id], onDelete: Restrict)
+  appointments Appointment[]
+  payments     Payment[]
+
+  @@index([clientId])
+  @@index([vehicleId])
+  @@index([planId])
+  @@index([status])
+  @@index([endDate])
+}
+
+model Company {
+  id                 String   @id @default(cuid())
+  name               String
+  rnc                String   @unique
+  contactName        String
+  contactEmail       String
+  contactPhone       String
+  vehicleCount       Int?
+  vehicleTypes       String?  // JSON-encoded list
+  servicesRequired   String?  // JSON-encoded list
+  estimatedFrequency String?
+  notes              String?
+  internalNotes      String?
+  status             String   @default("PENDING") // PENDING | CONTACTED | ACTIVE | ARCHIVED
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  vehicles     Vehicle[]
+  contracts    CorporateContract[]
+  appointments Appointment[]
+
+  @@index([status])
+  @@index([rnc])
+}
+
+model CorporateContract {
+  id                    String   @id @default(cuid())
+  companyId             String
+  contractCode          String   @unique
+  planName              String   @default("Flota Básica")
+  monthlyFeePerVehicle  Decimal  @default(1500) // sin ITBIS
+  vehicleCount          Int
+  discountPercent       Int      @default(10)
+  includedVisitsPerYear Int      @default(4)
+  startDate             DateTime
+  endDate               DateTime
+  paymentTermsDays      Int      @default(30)
+  status                String   @default("ACTIVE") // DRAFT | ACTIVE | EXPIRED | CANCELLED
+  notes                 String?
+  createdAt             DateTime @default(now())
+
+  company  Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  payments Payment[]
+
+  @@index([companyId])
+  @@index([status])
+}
+
+model Payment {
+  id                  String   @id @default(cuid())
+  subscriptionId      String?
+  appointmentId       String?
+  corporateContractId String?
+  clientId            String
+  amount              Decimal
+  taxAmount           Decimal  @default(0)
+  status              String   @default("PENDING") // PENDING | PAID | PARTIAL | REFUNDED
+  method              String?  // TRANSFERENCIA | TARJETA | EFECTIVO | DEMO
+  reference           String?
+  isDemoPayment       Boolean  @default(true)
+  notes               String?
+  createdAt           DateTime @default(now())
+
+  subscription      Subscription?      @relation(fields: [subscriptionId], references: [id], onDelete: SetNull)
+  appointment       Appointment?       @relation(fields: [appointmentId], references: [id], onDelete: SetNull)
+  corporateContract CorporateContract? @relation(fields: [corporateContractId], references: [id], onDelete: SetNull)
+  client            User               @relation(fields: [clientId], references: [id], onDelete: Restrict)
+
+  @@index([clientId])
+  @@index([subscriptionId])
+  @@index([appointmentId])
+  @@index([corporateContractId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model Promotion {
+  id              String    @id @default(cuid())
+  code            String    @unique
+  name            String
+  description     String
+  discountPercent Int
+  isActive        Boolean   @default(true)
+  validFrom       DateTime?
+  validUntil      DateTime?
+  maxUses         Int?
+  currentUses     Int       @default(0)
+  createdAt       DateTime  @default(now())
+
+  @@index([code])
+  @@index([isActive])
+}
+
+// ─────────────────────────────────────────────
+// NOTIFICATIONS, AUDIT & SYSTEM CONFIGURATION
+// ─────────────────────────────────────────────
+
+model Notification {
+  id               String    @id @default(cuid())
+  userId           String
+  type             String    // ACCOUNT_CREATED | APPOINTMENT_CONFIRMED | APPOINTMENT_REMINDER | APPOINTMENT_RESCHEDULED | APPOINTMENT_CANCELLED | STATUS_CHANGE | SERVICE_COMPLETED | MAINTENANCE_DUE | MEMBERSHIP_EXPIRING
+  channel          String    @default("INTERNAL") // INTERNAL | EMAIL | WHATSAPP
+  title            String
+  body             String
+  deliveryStatus   String    @default("DELIVERED") // DELIVERED | PENDING_PROVIDER | NOT_CONFIGURED | FAILED
+  providerResponse String?
+  dedupeKey        String?   @unique
+  isRead           Boolean   @default(false)
+  sentAt           DateTime?
+  createdAt        DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([userId, isRead])
+  @@index([type])
+  @@index([channel])
+  @@index([createdAt])
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  userId     String?
+  action     String
+  entityType String
+  entityId   String
+  details    String?
+  ipAddress  String?
+  createdAt  DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([entityType, entityId])
+  @@index([action])
+  @@index([createdAt])
+}
+
+model SystemConfig {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  value       String
+  description String?
+  updatedAt   DateTime @updatedAt
+
+  @@index([key])
+}

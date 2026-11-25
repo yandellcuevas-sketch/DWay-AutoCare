@@ -1,0 +1,42 @@
+# Dependencies
+/node_modules
+/.pnp
+.pnp.js
+.yarn/install-state.gz
+
+# Testing & build outputs
+/coverage
+/.next/
+/out/
+/build
+
+# Misc
+.DS_Store
+*.pem
+
+# Debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment & Secrets (NEVER commit credentials)
+.env
+.env.*
+!.env.example
+
+# Local SQLite databases & backups (keep private)
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+/prisma/dev.db*
+/prisma/test*.db*
+/prisma/shot*.db*
+/prisma/migrations/
+/backups/
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+imglogodway.jpeg

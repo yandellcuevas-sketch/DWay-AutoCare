@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: dway-autocare
+    runtime: node
+    plan: free
+    region: ohio
+    buildCommand: npm install && npm run build:render
+    startCommand: npm run start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: NEXTAUTH_URL
+        sync: false
+      - key: NEXTAUTH_SECRET
+        generateValue: true
+      - key: NEXT_PUBLIC_APP_NAME
+        value: DWay AutoCare
+      - key: NEXT_PUBLIC_TIMEZONE
+        value: America/Santo_Domingo
+      - key: DEFAULT_ITBIS_RATE
+        value: "0.18"
