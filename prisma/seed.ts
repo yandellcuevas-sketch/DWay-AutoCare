@@ -25,7 +25,7 @@ async function main() {
   for (const c of configs) {
     await prisma.systemConfig.upsert({
       where: { key: c.key },
-      update: { value: c.value, description: c.description },
+      update: {},
       create: c,
     });
   }
@@ -459,7 +459,7 @@ async function main() {
   for (const s of services) {
     await prisma.service.upsert({
       where: { slug: s.slug },
-      update: s,
+      update: {},
       create: s,
     });
   }
@@ -554,7 +554,7 @@ async function main() {
   for (const p of plans) {
     await prisma.membershipPlan.upsert({
       where: { slug: p.slug },
-      update: p,
+      update: {},
       create: p,
     });
   }
