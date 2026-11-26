@@ -412,30 +412,73 @@ export function AdminCalendarAndAppointments({
       </div>
 
       {viewMode === "calendar" ? (
-        <div className="rounded-xl border border-gray-200 bg-white p-4">
-          <FullCalendar
-            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-            initialView="dayGridMonth"
-            locale={esLocale}
-            headerToolbar={{
-              left: "prev,next today",
-              center: "title",
-              right: "dayGridMonth,timeGridWeek,timeGridDay",
-            }}
-            events={calendarEvents}
-            slotMinTime="07:30:00"
-            slotMaxTime="18:00:00"
-            contentHeight={540}
-            dayMaxEvents={3}
-            eventClick={(info) => {
-              const found = appointments.find((a) => a.id === info.event.id);
-              if (found) openDetailModal(found);
-            }}
-          />
+        <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white p-3 sm:p-4">
+          <div className="min-w-[540px] sm:min-w-0">
+            <FullCalendar
+              plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+              initialView="dayGridMonth"
+              locale={esLocale}
+              headerToolbar={{
+                left: "prev,next today",
+                center: "title",
+                right: "dayGridMonth,timeGridWeek,timeGridDay",
+              }}
+              events={calendarEvents}
+              slotMinTime="07:30:00"
+              slotMaxTime="18:00:00"
+              contentHeight={540}
+              dayMaxEvents={3}
+              eventClick={(info) => {
+                const found = appointments.find((a) => a.id === info.event.id);
+                if (found) openDetailModal(found);
+              }}
+            />
+          </div>
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white">
-          <table className="w-full text-left text-sm">
+        <div className="space-y-3">
+          {/* Mobile Cards */}
+          <div className="space-y-3 md:hidden">
+            {filteredAppointments.map((a) => (
+              <div key={a.id} className="rounded-xl border border-gray-200 bg-white p-4">
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <p className="text-sm font-extrabold text-[#1E2127]">{a.bookingCode}</p>
+                    <p className="text-xs text-[#424750]">{formatDateTimeRD(a.appointmentDate)}</p>
+                  </div>
+                  <span
+                    className={`inline-block rounded border px-2 py-0.5 text-[11px] font-bold ${
+                      APPOINTMENT_STATUS_COLORS[a.status] ?? "bg-gray-100"
+                    }`}
+                  >
+                    {APPOINTMENT_STATUS_LABELS[a.status] ?? a.status}
+                  </span>
+                </div>
+                <div className="mt-2 text-xs text-[#1E2127]">
+                  <p className="font-semibold">{a.client.name}</p>
+                  <p className="text-[#424750]">
+                    {a.vehicle.brand} {a.vehicle.model} ({a.vehicle.plate}) ·{" "}
+                    {a.mode === "HOME_SERVICE" ? "Domicilio" : "Taller"}
+                  </p>
+                </div>
+                <div className="mt-3 flex items-center justify-between border-t border-gray-100 pt-2.5">
+                  <span className="text-sm font-extrabold text-[#1E2127]">
+                    {formatDOP(a.totalAmount)}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => openDetailModal(a)}
+                    className="min-h-[40px] rounded-lg border border-[#1E2127] px-3.5 py-1.5 text-xs font-semibold text-[#1E2127] hover:bg-[#1E2127] hover:text-white"
+                  >
+                    Gestionar
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+          {/* Desktop Table */}
+          <div className="hidden overflow-x-auto rounded-xl border border-gray-200 bg-white md:block">
+            <table className="w-full text-left text-sm">
             <thead className="border-b border-gray-200 bg-[#FAFAFA] text-xs font-bold uppercase text-[#424750]">
               <tr>
                 <th scope="col" className="px-4 py-3">Código</th>
@@ -494,6 +537,7 @@ export function AdminCalendarAndAppointments({
               ))}
             </tbody>
           </table>
+          </div>
         </div>
       )}
 

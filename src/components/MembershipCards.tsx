@@ -2,7 +2,16 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { Check, Info, ArrowRight, Sparkles, ShieldCheck, Minus } from "lucide-react";
+import {
+  Check,
+  Info,
+  ArrowRight,
+  Sparkles,
+  ShieldCheck,
+  Minus,
+  ChevronDown,
+  ChevronUp,
+} from "lucide-react";
 import { motion } from "framer-motion";
 import { formatDOP } from "@/lib/constants";
 
@@ -33,20 +42,26 @@ export function MembershipCards({
   showComparison?: boolean;
 }) {
   const [cycle, setCycle] = useState<"MONTHLY" | "ANNUAL">("MONTHLY");
+  const [expandedPlans, setExpandedPlans] = useState<Record<string, boolean>>({});
+  const [mobileCompareIdx, setMobileCompareIdx] = useState(0);
+
+  const togglePlanDetails = (id: string) => {
+    setExpandedPlans((prev) => ({ ...prev, [id]: !prev[id] }));
+  };
 
   return (
-    <div>
+    <div className="min-w-0 w-full">
       <div className="mb-8 flex flex-wrap items-center justify-center gap-3">
         <div
           role="group"
           aria-label="Modalidad de pago de membresía"
-          className="inline-flex rounded-lg border border-gray-300 bg-white p-1 shadow-xs"
+          className="grid w-full max-w-md grid-cols-2 rounded-lg border border-gray-300 bg-white p-1 shadow-xs sm:inline-flex sm:w-auto sm:max-w-none"
         >
           <button
             type="button"
             onClick={() => setCycle("MONTHLY")}
             aria-pressed={cycle === "MONTHLY"}
-            className={`min-h-[42px] rounded-md px-4 py-2 text-sm font-semibold transition-all duration-200 ${
+            className={`min-h-[42px] rounded-md px-3 py-2 text-xs font-semibold transition-all duration-200 sm:px-4 sm:text-sm ${
               cycle === "MONTHLY"
                 ? "bg-[#1E2127] text-white"
                 : "text-[#424750] hover:text-[#1E2127]"
@@ -58,13 +73,13 @@ export function MembershipCards({
             type="button"
             onClick={() => setCycle("ANNUAL")}
             aria-pressed={cycle === "ANNUAL"}
-            className={`min-h-[42px] rounded-md px-4 py-2 text-sm font-semibold transition-all duration-200 ${
+            className={`min-h-[42px] rounded-md px-2.5 py-2 text-xs font-semibold transition-all duration-200 sm:px-4 sm:text-sm ${
               cycle === "ANNUAL"
                 ? "bg-[#F50923] text-white"
                 : "text-[#424750] hover:text-[#1E2127]"
             }`}
           >
-            Pago anual (ahorro ~10%)
+            Pago anual (-10%)
           </button>
         </div>
       </div>
@@ -128,35 +143,56 @@ export function MembershipCards({
                   )}
                 </div>
 
-                <div className="mt-5">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-[#1E2127]">
-                    Beneficios incluidos por vehículo
-                  </h4>
-                  <ul className="mt-3 space-y-2.5">
-                    {benefits.map((b) => (
-                      <li key={b} className="flex items-start gap-2.5 text-sm text-[#1E2127]">
-                        <Check
-                          className="mt-0.5 h-4 w-4 shrink-0 text-[#F50923]"
-                          aria-hidden="true"
-                        />
-                        <span>{b}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                <button
+                  type="button"
+                  onClick={() => togglePlanDetails(plan.id)}
+                  aria-expanded={Boolean(expandedPlans[plan.id])}
+                  className="mt-4 inline-flex min-h-[40px] items-center gap-1.5 text-xs font-bold text-[#1E2127] underline-offset-2 hover:underline lg:hidden"
+                >
+                  {expandedPlans[plan.id] ? (
+                    <>
+                      <ChevronUp className="h-4 w-4 text-[#F50923]" aria-hidden="true" />
+                      Ocultar beneficios y condiciones
+                    </>
+                  ) : (
+                    <>
+                      <ChevronDown className="h-4 w-4 text-[#F50923]" aria-hidden="true" />
+                      Ver beneficios y condiciones ({benefits.length})
+                    </>
+                  )}
+                </button>
 
-                <div className="mt-5 border-t border-gray-100 pt-4">
-                  <h4 className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#424750]">
-                    <Info className="h-3.5 w-3.5" aria-hidden="true" />
-                    Condiciones y restricciones
-                  </h4>
-                  <ul className="mt-2 space-y-1.5">
-                    {restrictions.map((r) => (
-                      <li key={r} className="text-xs text-[#424750]">
-                        • {r}
-                      </li>
-                    ))}
-                  </ul>
+                <div className={expandedPlans[plan.id] ? "block" : "hidden lg:block"}>
+                  <div className="mt-5">
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-[#1E2127]">
+                      Beneficios incluidos por vehículo
+                    </h4>
+                    <ul className="mt-3 space-y-2.5">
+                      {benefits.map((b) => (
+                        <li key={b} className="flex items-start gap-2.5 text-sm text-[#1E2127]">
+                          <Check
+                            className="mt-0.5 h-4 w-4 shrink-0 text-[#F50923]"
+                            aria-hidden="true"
+                          />
+                          <span>{b}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="mt-5 border-t border-gray-100 pt-4">
+                    <h4 className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#424750]">
+                      <Info className="h-3.5 w-3.5" aria-hidden="true" />
+                      Condiciones y restricciones
+                    </h4>
+                    <ul className="mt-2 space-y-1.5">
+                      {restrictions.map((r) => (
+                        <li key={r} className="text-xs text-[#424750]">
+                          • {r}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
               </div>
 
@@ -180,7 +216,7 @@ export function MembershipCards({
 
       {showComparison && plans.length > 0 && (
         <div className="mt-10 overflow-hidden rounded-2xl border border-gray-200 bg-white">
-          <div className="border-b border-gray-200 bg-[#1E2127] px-6 py-4 text-white">
+          <div className="border-b border-gray-200 bg-[#1E2127] px-4 py-4 text-white sm:px-6">
             <h3 className="text-base font-bold sm:text-lg">
               Tabla comparativa de planes de membresía
             </h3>
@@ -188,7 +224,77 @@ export function MembershipCards({
               Cobertura por vehículo registrado, tarifas transparentes en RD$ y beneficios anuales no acumulables.
             </p>
           </div>
-          <div className="overflow-x-auto">
+          {/* Mobile Tabbed Comparison */}
+          <div className="p-4 md:hidden">
+            <div className="mb-4 grid grid-cols-3 gap-1.5 rounded-lg border border-gray-200 bg-[#FAFAFA] p-1">
+              {plans.map((p, idx) => (
+                <button
+                  key={p.id}
+                  type="button"
+                  onClick={() => setMobileCompareIdx(idx)}
+                  aria-pressed={mobileCompareIdx === idx}
+                  className={`min-h-[40px] rounded-md px-2 py-1.5 text-xs font-bold transition-colors ${
+                    mobileCompareIdx === idx
+                      ? "bg-[#1E2127] text-white"
+                      : "text-[#424750] hover:text-[#1E2127]"
+                  }`}
+                >
+                  {p.name.replace("Plan ", "")}
+                </button>
+              ))}
+            </div>
+            {plans[mobileCompareIdx] && (
+              <dl className="divide-y divide-gray-100 text-xs">
+                <div className="flex items-center justify-between py-2.5">
+                  <dt className="font-semibold text-[#424750]">Modalidad</dt>
+                  <dd className="font-bold text-[#F50923]">{plans[mobileCompareIdx].targetMode}</dd>
+                </div>
+                <div className="flex items-center justify-between py-2.5">
+                  <dt className="font-semibold text-[#424750]">Mensual (ITBIS incl.)</dt>
+                  <dd className="font-bold text-[#1E2127]">
+                    {formatDOP(plans[mobileCompareIdx].monthlyPrice * (1 + itbisRate))}
+                  </dd>
+                </div>
+                <div className="flex items-center justify-between py-2.5">
+                  <dt className="font-semibold text-[#424750]">Anual (-10%, ITBIS incl.)</dt>
+                  <dd className="font-bold text-[#1E2127]">
+                    {formatDOP(plans[mobileCompareIdx].annualPrice * (1 + itbisRate))}
+                  </dd>
+                </div>
+                <div className="flex items-center justify-between py-2.5">
+                  <dt className="font-semibold text-[#424750]">Revisiones 20 pts / año</dt>
+                  <dd className="font-bold text-[#1E2127]">{plans[mobileCompareIdx].includedReviews ?? 0}</dd>
+                </div>
+                <div className="flex items-center justify-between py-2.5">
+                  <dt className="font-semibold text-[#424750]">Pruebas batería / año</dt>
+                  <dd className="font-bold text-[#1E2127]">{plans[mobileCompareIdx].includedBatteryTests ?? 0}</dd>
+                </div>
+                <div className="flex items-center justify-between py-2.5">
+                  <dt className="font-semibold text-[#424750]">Diagnóstico escáner / año</dt>
+                  <dd className="font-bold text-[#1E2127]">
+                    {(plans[mobileCompareIdx].includedDiagnostics ?? 0) > 0
+                      ? plans[mobileCompareIdx].includedDiagnostics
+                      : "No incluido"}
+                  </dd>
+                </div>
+                <div className="flex items-center justify-between py-2.5">
+                  <dt className="font-semibold text-[#424750]">Cambio aceite / año</dt>
+                  <dd className="font-bold text-[#1E2127]">
+                    {(plans[mobileCompareIdx].includedOilChanges ?? 0) > 0
+                      ? plans[mobileCompareIdx].includedOilChanges
+                      : "No incluido"}
+                  </dd>
+                </div>
+                <div className="flex items-center justify-between py-2.5">
+                  <dt className="font-semibold text-[#424750]">Descuento adicional</dt>
+                  <dd className="font-extrabold text-[#F50923]">
+                    {plans[mobileCompareIdx].discountPercent}%
+                  </dd>
+                </div>
+              </dl>
+            )}
+          </div>
+          <div className="hidden overflow-x-auto md:block">
             <table className="w-full min-w-[680px] border-collapse text-left text-sm">
               <thead>
                 <tr className="border-b border-gray-200 bg-[#FAFAFA]">

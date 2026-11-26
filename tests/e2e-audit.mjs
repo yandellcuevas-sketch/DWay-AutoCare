@@ -320,26 +320,56 @@ async function runAudit() {
       console.log("⚠️ 6. Omitida prueba Admin (define E2E_ADMIN_PASSWORD para validarla).");
     }
 
-    // 7. 6 Responsive Viewports (zero horizontal overflow)
+    // 7. 12 Responsive Viewports + Mobile iOS/Input Guard checks
     const viewports = [
-      { width: 1920, height: 1080 },
-      { width: 1440, height: 900 },
-      { width: 1366, height: 768 },
-      { width: 768, height: 1024 },
-      { width: 390, height: 844 },
+      { width: 320, height: 568 },
+      { width: 375, height: 667 },
       { width: 360, height: 800 },
+      { width: 390, height: 844 },
+      { width: 393, height: 852 },
+      { width: 430, height: 932 },
+      { width: 440, height: 956 },
+      { width: 768, height: 1024 },
+      { width: 1024, height: 768 },
+      { width: 1280, height: 720 },
+      { width: 1366, height: 768 },
+      { width: 1920, height: 1080 },
     ];
     for (const vp of viewports) {
       const vpCtx = await browser.newContext({ viewport: vp, locale: "es-DO" });
       const vPage = await vpCtx.newPage();
-      for (const rt of ["/", "/servicios", "/membresias", "/agendar"]) {
+      for (const rt of ["/", "/servicios", "/membresias", "/empresas", "/agendar", "/auth/login"]) {
         await vPage.goto(`${BASE_URL}${rt}`, { waitUntil: "networkidle" });
         const ov = await vPage.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
         assert(!ov, `Overflow horizontal en ${rt} bajo viewport ${vp.width}x${vp.height}`);
       }
+      if (vp.width === 390) {
+        await vPage.goto(`${BASE_URL}/auth/login`, { waitUntil: "networkidle" });
+        const inputCheck = await vPage.evaluate(() => {
+          const email = document.querySelector("#login-email");
+          const nav = document.querySelector(".mobile-bottom-nav");
+          const fontSize = email ? parseFloat(getComputedStyle(email).fontSize) : 0;
+          const navVisibleBefore = nav ? getComputedStyle(nav).display !== "none" : false;
+          if (email) email.focus();
+          const attrFocus = document.documentElement.getAttribute("data-keyboard-open");
+          const navHiddenFocus = nav ? getComputedStyle(nav).display === "none" : false;
+          if (email) email.blur();
+          return { fontSize, navVisibleBefore, attrFocus, navHiddenFocus };
+        });
+        assert(inputCheck.fontSize >= 16, `Font-size móvil < 16px (${inputCheck.fontSize}px)`);
+        assert(inputCheck.navVisibleBefore, "Barra inferior móvil no visible en 390px");
+        assert(inputCheck.attrFocus === "true" && inputCheck.navHiddenFocus, "Barra inferior no se ocultó al enfocar input");
+        await vPage.waitForTimeout(200);
+        const postBlur = await vPage.evaluate(() => ({
+          attrAfter: document.documentElement.getAttribute("data-keyboard-open"),
+          scrollX: window.scrollX,
+          overflow: document.documentElement.scrollWidth > window.innerWidth,
+        }));
+        assert(!postBlur.attrAfter && postBlur.scrollX === 0 && !postBlur.overflow, `Estado post-blur inválido: ${JSON.stringify(postBlur)}`);
+      }
       await vpCtx.close();
     }
-    console.log("✅ 7. 6 resoluciones responsivas (1920px a 360px) verificadas sin desbordamiento.");
+    console.log("✅ 7. 12 resoluciones (320px a 1920px), font-size >= 16px, barra móvil y reset post-teclado verificados.");
 
     // 8. Optional Wi-Fi LAN IP Login Test
     if (WIFI_URL && CLIENT_PASS) {

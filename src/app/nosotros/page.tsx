@@ -94,7 +94,7 @@ export default function NosotrosPage() {
             <div className="lg:col-span-6">
               <figure className="overflow-hidden rounded-xl border border-gray-200 bg-white">
                 <img
-                  src="/images/workshop/workshop-branded.jpg"
+                  src="/images/workshop/workshop-branded.webp"
                   alt="Centro de mantenimiento preventivo DWay AutoCare"
                   className="aspect-video w-full object-cover"
                 />

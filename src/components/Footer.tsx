@@ -103,7 +103,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-10 flex flex-col items-start justify-between gap-4 border-t border-[#424750]/40 pt-6 text-xs text-gray-400 sm:flex-row sm:items-center">
+        <div className="mt-10 flex flex-col items-start justify-between gap-4 border-t border-[#424750]/40 pb-20 pt-6 text-xs text-gray-400 sm:flex-row sm:items-center md:pb-0">
           <p>
             © {new Date().getFullYear()} DWay AutoCare S.R.L. (Proyecto Empresarial PUCMM —
             Santo Domingo, República Dominicana).

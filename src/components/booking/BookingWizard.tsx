@@ -589,8 +589,12 @@ export function BookingWizard({
   return (
     <div className="space-y-6">
       {/* Progress Indicator */}
-      <nav aria-label="Progreso de reserva" className="rounded-xl border border-gray-200 bg-white p-4">
-        <ol className="grid grid-cols-3 gap-2 sm:grid-cols-6">
+      <nav aria-label="Progreso de reserva" className="rounded-xl border border-gray-200 bg-white p-3 sm:p-4">
+        <div className="mb-2 flex items-center justify-between text-xs font-bold text-[#1E2127] sm:hidden">
+          <span className="text-[#F50923]">Paso {step} de {STEPS.length}</span>
+          <span className="truncate pl-2">{STEPS[step - 1]?.label}</span>
+        </div>
+        <ol className="hidden gap-2 sm:grid sm:grid-cols-6">
           {STEPS.map((s) => {
             const isCurrent = step === s.num;
             const isDone = step > s.num;
@@ -1260,7 +1264,7 @@ export function BookingWizard({
 
       {/* STEP 4: REAL-TIME AVAILABILITY CALENDAR */}
       {step === 4 && (
-        <section className="rounded-2xl border border-gray-200 bg-white p-6 sm:p-8">
+        <section className="rounded-2xl border border-gray-200 bg-white p-4 sm:p-8">
           <h2 className="text-xl font-extrabold text-[#1E2127]">
             Paso 4. Selecciona fecha y horario disponible
           </h2>
@@ -1269,9 +1273,53 @@ export function BookingWizard({
             desplazamiento y citas existentes.
           </p>
 
-          <div className="mt-6 grid gap-8 lg:grid-cols-12">
-            {/* Interactive Month Calendar */}
-            <div className="rounded-xl border border-gray-200 bg-[#FAFAFA] p-4 lg:col-span-6">
+          {/* Mobile Quick Day-Pill Selector (sm:hidden) */}
+          <div className="mt-4 sm:hidden">
+            <p className="mb-2 text-xs font-bold uppercase tracking-wider text-[#424750]">
+              Próximos días disponibles
+            </p>
+            <div className="flex gap-2 overflow-x-auto pb-2">
+              {(() => {
+                const upcoming: { dateStr: string; dayName: string; dayNum: number; monthShort: string }[] = [];
+                const cursor = new Date();
+                for (let i = 0; i < 21 && upcoming.length < 14; i++) {
+                  const d = new Date(cursor.getFullYear(), cursor.getMonth(), cursor.getDate() + i);
+                  if (d.getDay() === 0) continue; // skip Sundays
+                  const dateStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+                  upcoming.push({
+                    dateStr,
+                    dayName: d.toLocaleDateString("es-DO", { weekday: "short" }).replace(".", ""),
+                    dayNum: d.getDate(),
+                    monthShort: d.toLocaleDateString("es-DO", { month: "short" }).replace(".", ""),
+                  });
+                }
+                return upcoming.map((u) => {
+                  const active = selectedDate === u.dateStr;
+                  return (
+                    <button
+                      key={u.dateStr}
+                      type="button"
+                      onClick={() => setSelectedDate(u.dateStr)}
+                      aria-pressed={active}
+                      className={`flex min-h-[60px] min-w-[62px] shrink-0 flex-col items-center justify-center rounded-xl border px-2.5 py-2 text-center transition-colors ${
+                        active
+                          ? "border-[#F50923] bg-[#F50923] text-white"
+                          : "border-gray-200 bg-[#FAFAFA] text-[#1E2127]"
+                      }`}
+                    >
+                      <span className="text-[10px] font-bold uppercase opacity-80">{u.dayName}</span>
+                      <span className="text-base font-extrabold leading-tight">{u.dayNum}</span>
+                      <span className="text-[10px] font-semibold capitalize opacity-80">{u.monthShort}</span>
+                    </button>
+                  );
+                });
+              })()}
+            </div>
+          </div>
+
+          <div className="mt-4 grid gap-6 sm:mt-6 sm:gap-8 lg:grid-cols-12">
+            {/* Interactive Month Calendar (Desktop & Tablet) */}
+            <div className="hidden rounded-xl border border-gray-200 bg-[#FAFAFA] p-4 sm:block lg:col-span-6">
               <div className="mb-4 flex items-center justify-between">
                 <button
                   type="button"

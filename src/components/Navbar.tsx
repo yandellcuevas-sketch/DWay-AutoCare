@@ -12,6 +12,9 @@ import {
   Shield,
   CalendarPlus,
   LayoutDashboard,
+  Home,
+  Wrench,
+  Award,
 } from "lucide-react";
 import { DWayLogo } from "./DWayLogo";
 import { isStaffRole } from "@/lib/auth-client";
@@ -32,8 +35,14 @@ export function Navbar() {
   const isStaff = isStaffRole(session?.user?.role);
   const accountHref = isStaff ? "/admin" : "/portal";
 
+  const showBottomNav = !pathname.startsWith("/admin");
+
   return (
-    <header className="sticky top-0 z-50 border-b border-gray-200 bg-[#FAFAFA]/95 backdrop-blur-sm">
+    <>
+    <header
+      style={{ paddingTop: "env(safe-area-inset-top)" }}
+      className="sticky top-0 z-50 border-b border-gray-200 bg-[#FAFAFA]/95 backdrop-blur-sm no-print"
+    >
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
         <Link
           href="/"
@@ -204,5 +213,63 @@ export function Navbar() {
         </nav>
       )}
     </header>
+
+    {showBottomNav && (
+      <nav
+        aria-label="Navegación rápida móvil"
+        className="mobile-bottom-nav no-print fixed inset-x-0 bottom-0 z-50 border-t border-gray-200 bg-[#FAFAFA]/95 px-1 pt-1.5 backdrop-blur-md md:hidden pb-[max(0.45rem,env(safe-area-inset-bottom))]"
+      >
+        <div className="mx-auto grid max-w-md grid-cols-5 items-center gap-1">
+          <Link
+            href="/"
+            className={`flex min-h-[46px] flex-col items-center justify-center rounded-lg px-1 text-[11px] font-semibold transition-colors ${
+              pathname === "/" ? "text-[#F50923]" : "text-[#424750]"
+            }`}
+          >
+            <Home className="h-5 w-5" aria-hidden="true" />
+            <span className="mt-0.5 truncate">Inicio</span>
+          </Link>
+          <Link
+            href="/servicios"
+            className={`flex min-h-[46px] flex-col items-center justify-center rounded-lg px-1 text-[11px] font-semibold transition-colors ${
+              pathname.startsWith("/servicios") ? "text-[#F50923]" : "text-[#424750]"
+            }`}
+          >
+            <Wrench className="h-5 w-5" aria-hidden="true" />
+            <span className="mt-0.5 truncate">Servicios</span>
+          </Link>
+          <Link
+            href="/agendar"
+            className="flex min-h-[46px] flex-col items-center justify-center rounded-xl bg-[#F50923] px-1 text-[11px] font-bold text-white shadow-sm"
+          >
+            <CalendarPlus className="h-5 w-5" aria-hidden="true" />
+            <span className="mt-0.5 truncate">Agendar</span>
+          </Link>
+          <Link
+            href="/membresias"
+            className={`flex min-h-[46px] flex-col items-center justify-center rounded-lg px-1 text-[11px] font-semibold transition-colors ${
+              pathname.startsWith("/membresias") ? "text-[#F50923]" : "text-[#424750]"
+            }`}
+          >
+            <Award className="h-5 w-5" aria-hidden="true" />
+            <span className="mt-0.5 truncate">Planes</span>
+          </Link>
+          <Link
+            href={status === "authenticated" ? accountHref : "/auth/login"}
+            className={`flex min-h-[46px] flex-col items-center justify-center rounded-lg px-1 text-[11px] font-semibold transition-colors ${
+              pathname.startsWith("/portal") || pathname.startsWith("/auth")
+                ? "text-[#F50923]"
+                : "text-[#424750]"
+            }`}
+          >
+            <User className="h-5 w-5" aria-hidden="true" />
+            <span className="mt-0.5 truncate">
+              {status === "authenticated" ? "Cuenta" : "Entrar"}
+            </span>
+          </Link>
+        </div>
+      </nav>
+    )}
+    </>
   );
 }

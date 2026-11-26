@@ -64,8 +64,8 @@ export default async function HomePage() {
       <main id="main-content" tabIndex={-1} className="flex-1">
         {/* 1. HERO SECTION */}
         <section className="relative border-b border-[#424750]/20 bg-[#1E2127] text-white">
-          <div className="mx-auto grid max-w-7xl items-center gap-10 px-4 py-12 sm:px-6 lg:grid-cols-12 lg:px-8 lg:py-20">
-            <HeroEntrance className="space-y-6 lg:col-span-6">
+          <div className="mx-auto grid max-w-7xl items-center gap-6 px-4 py-7 sm:px-6 sm:py-12 lg:grid-cols-12 lg:gap-10 lg:px-8 lg:py-20">
+            <HeroEntrance className="space-y-4 sm:space-y-6 lg:col-span-6">
               <div className="flex flex-wrap items-center gap-4">
                 <DWayLogo variant="light" size="md" />
                 <div className="inline-flex items-center gap-2 rounded-md border border-[#424750] bg-[#15171B] px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-gray-200">
@@ -125,9 +125,9 @@ export default async function HomePage() {
             <HeroEntrance delay={0.08} className="lg:col-span-6">
               <figure className="overflow-hidden rounded-xl border border-[#424750] bg-[#15171B]">
                 <img
-                  src="/images/workshop/workshop-branded.jpg"
+                  src="/images/workshop/workshop-branded.webp"
                   alt="Técnico de DWay AutoCare realizando inspección preventiva en un vehículo sobre elevador hidráulico"
-                  className="aspect-video w-full object-cover"
+                  className="aspect-video max-h-[190px] w-full object-cover sm:max-h-none"
                 />
                 <figcaption className="border-t border-[#424750]/50 px-3 py-1.5 text-[11px] text-gray-400">
                   Representación visual conceptual de nuestro centro físico equipado.
@@ -143,7 +143,7 @@ export default async function HomePage() {
             <div className="lg:col-span-6">
               <figure className="overflow-hidden rounded-xl border border-gray-200 bg-[#FAFAFA]">
                 <img
-                  src="/images/mobile-service/mobile-unit-branded.jpg"
+                  src="/images/mobile-service/mobile-unit-branded.webp"
                   alt="Unidad móvil DWay AutoCare realizando mantenimiento preventivo a domicilio en Santo Domingo"
                   className="aspect-video w-full object-cover"
                 />
@@ -342,21 +342,21 @@ export default async function HomePage() {
             <div className="mt-10 grid gap-6 md:grid-cols-3">
               <div className="overflow-hidden rounded-xl border border-[#424750] bg-[#15171B]">
                 <img
-                  src="/images/services/service-oil.jpg"
+                  src="/images/services/service-oil.webp"
                   alt="Cambio profesional de aceite sintético y filtro en DWay AutoCare"
                   className="aspect-[4/3] w-full object-cover"
                 />
               </div>
               <div className="overflow-hidden rounded-xl border border-[#424750] bg-[#15171B]">
                 <img
-                  src="/images/services/service-inspection.jpg"
+                  src="/images/services/service-inspection.webp"
                   alt="Inspección de sistema de frenos, torque y prueba de batería"
                   className="aspect-[4/3] w-full object-cover"
                 />
               </div>
               <div className="overflow-hidden rounded-xl border border-[#424750] bg-[#15171B]">
                 <img
-                  src="/images/services/service-diagnostics.jpg"
+                  src="/images/services/service-diagnostics.webp"
                   alt="Diagnóstico electrónico básico OBD-II y prueba digital de batería"
                   className="aspect-[4/3] w-full object-cover"
                 />
@@ -384,7 +384,7 @@ export default async function HomePage() {
 
             <div className="mb-10 overflow-hidden rounded-2xl border border-gray-200 bg-white">
               <img
-                src="/images/memberships/memberships-banner.jpg"
+                src="/images/memberships/memberships-banner.webp"
                 alt="Asesor técnico DWay AutoCare mostrando checklist digital preventivo a propietaria"
                 className="aspect-[21/7] w-full object-cover object-center"
               />
@@ -436,7 +436,7 @@ export default async function HomePage() {
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#F50923]" aria-hidden="true" />
-                    <span>10% de descuento base (hasta 15% según volumen vehicular) y prioridad en agenda.</span>
+                    <span>10% de descuento en otros servicios aplicables y prioridad en citas.</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#F50923]" aria-hidden="true" />
@@ -523,7 +523,7 @@ export default async function HomePage() {
                 <p className="mt-1 text-xs text-[#424750]">
                   Sectores del Distrito Nacional sin recargo adicional y zonas extendidas con tarifa transparente de desplazamiento:
                 </p>
-                <div className="mt-4 flex flex-wrap gap-2">
+                <div className="mt-4 hidden flex-wrap gap-2 md:flex">
                   {zones.map((z) => (
                     <span
                       key={z.id}
@@ -539,6 +539,28 @@ export default async function HomePage() {
                     </span>
                   ))}
                 </div>
+                <details className="mt-3 rounded-lg border border-gray-200 bg-[#FAFAFA] p-3 md:hidden">
+                  <summary className="flex min-h-[40px] cursor-pointer items-center justify-between text-xs font-bold text-[#1E2127]">
+                    <span>Ver {zones.length} sectores cubiertos</span>
+                    <span className="text-[#F50923]">Desplegar</span>
+                  </summary>
+                  <div className="mt-3 flex flex-wrap gap-1.5">
+                    {zones.map((z) => (
+                      <span
+                        key={z.id}
+                        className={`inline-flex items-center gap-1 rounded-md border px-2 py-1 text-[11px] font-semibold ${
+                          Number(z.surchargeFee) > 0
+                            ? "border-amber-200 bg-amber-50 text-amber-900"
+                            : "border-gray-200 bg-white text-[#1E2127]"
+                        }`}
+                      >
+                        <MapPin className="h-3 w-3 text-[#F50923]" aria-hidden="true" />
+                        {z.sector}
+                        {Number(z.surchargeFee) > 0 && ` (+RD$${Number(z.surchargeFee)})`}
+                      </span>
+                    ))}
+                  </div>
+                </details>
               </div>
             </div>
           </div>
