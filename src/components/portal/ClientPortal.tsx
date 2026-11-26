@@ -700,7 +700,7 @@ export function ClientPortal({
       <div
         role="tablist"
         aria-label="Secciones del portal del cliente"
-        className="flex flex-wrap gap-1.5 rounded-xl border border-gray-200 bg-white p-1.5"
+        className="flex gap-1.5 overflow-x-auto rounded-xl border border-gray-200 bg-white p-1.5 sm:flex-wrap"
       >
         {[
           { id: "resumen", label: "Resumen", icon: Sparkles },
@@ -724,7 +724,7 @@ export function ClientPortal({
               role="tab"
               aria-selected={active}
               onClick={() => setActiveTab(tab.id as TabId)}
-              className={`inline-flex min-h-[42px] items-center gap-1.5 rounded-lg px-3.5 py-2 text-xs font-semibold sm:text-sm ${
+              className={`inline-flex min-h-[42px] shrink-0 items-center gap-1.5 rounded-lg px-3.5 py-2 text-xs font-semibold sm:text-sm ${
                 active
                   ? "bg-[#1E2127] text-white"
                   : "text-[#424750] hover:bg-gray-100 hover:text-[#1E2127]"

@@ -45,7 +45,7 @@ export default async function MembresiasPage() {
 
           <figure className="mb-10 overflow-hidden rounded-2xl border border-gray-200 bg-white">
             <img
-              src="/images/memberships/memberships-banner.jpg"
+              src="/images/memberships/memberships-banner.webp"
               alt="Técnico de DWay AutoCare revisando la lista preventiva junto al propietario de un vehículo"
               className="aspect-[21/9] w-full object-cover object-center"
             />

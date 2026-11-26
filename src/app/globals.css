@@ -12,6 +12,7 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: clip;
 }
 
 body {
@@ -33,23 +34,34 @@ input[type="radio"] {
   outline-offset: 2px;
 }
 
-/* Prevent iOS zoom on inputs */
-@media (max-width: 768px) {
-  input,
+/* Prevent iOS Safari auto-zoom and horizontal drift on form controls */
+@media (pointer: coarse), (max-width: 1023px) {
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
   select,
   textarea {
-    font-size: max(1rem, 1em);
+    font-size: 16px !important;
   }
 }
 
-/* Native <dialog> modal scroll locking per modern-web-guidance */
+/* Native <dialog> modal scroll locking & mobile viewport safety */
 dialog:modal {
   overscroll-behavior: contain;
+  max-width: calc(100vw - 1.5rem);
+  max-height: 88dvh;
+  overflow-y: auto;
 }
 dialog::backdrop {
   background: rgba(21, 23, 27, 0.65);
   overflow: hidden;
   overscroll-behavior: contain;
+}
+
+/* Safe-area & keyboard-aware mobile navigation helpers */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+html[data-keyboard-open="true"] .mobile-bottom-nav {
+  display: none !important;
 }
 
 /* Visually hidden utility keeping accessibility tree intact */
@@ -66,6 +78,10 @@ dialog::backdrop {
 }
 
 /* FullCalendar corporate theming */
+.fc .fc-toolbar {
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
 .fc .fc-button-primary {
   background-color: #1E2127 !important;
   border-color: #1E2127 !important;

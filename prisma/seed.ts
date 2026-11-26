@@ -288,7 +288,7 @@ async function main() {
       isAvailableWorkshop: true,
       isAvailableHome: true,
       requiresLift: false,
-      imageUrl: "/images/services/service-oil.jpg",
+      imageUrl: "/images/services/service-oil.webp",
       iconName: "Droplets",
       conditions:
         "Incluye hasta 4 litros de aceite semisintético y filtro estándar. A domicilio requiere espacio plano, seguro y ventilado.",
@@ -306,7 +306,7 @@ async function main() {
       isAvailableWorkshop: true,
       isAvailableHome: true,
       requiresLift: false,
-      imageUrl: "/images/services/service-oil.jpg",
+      imageUrl: "/images/services/service-oil.webp",
       iconName: "Droplet",
       conditions:
         "Incluye hasta 4 litros de aceite sintético y filtro estándar. Litros adicionales según capacidad del motor.",
@@ -324,7 +324,7 @@ async function main() {
       isAvailableWorkshop: true,
       isAvailableHome: true,
       requiresLift: false,
-      imageUrl: "/images/workshop/workshop-branded.jpg",
+      imageUrl: "/images/workshop/workshop-branded.webp",
       iconName: "ClipboardCheck",
       conditions:
         "En servicio a domicilio la inspección de frenos y parte inferior es visual sin elevador.",
@@ -342,7 +342,7 @@ async function main() {
       isAvailableWorkshop: true,
       isAvailableHome: true,
       requiresLift: false,
-      imageUrl: "/images/mobile-service/mobile-unit-branded.jpg",
+      imageUrl: "/images/mobile-service/mobile-unit-branded.webp",
       iconName: "Wind",
       conditions: "Aplica para vehículos ligeros, sedanes, jeepetas y camionetas comunes.",
       sortOrder: 4,
@@ -359,7 +359,7 @@ async function main() {
       isAvailableWorkshop: true,
       isAvailableHome: false,
       requiresLift: true,
-      imageUrl: "/images/services/service-inspection.jpg",
+      imageUrl: "/images/services/service-inspection.webp",
       iconName: "Disc",
       conditions:
         "Exclusivo en nuestro taller físico porque requiere elevador hidráulico por seguridad.",
@@ -377,7 +377,7 @@ async function main() {
       isAvailableWorkshop: true,
       isAvailableHome: false,
       requiresLift: true,
-      imageUrl: "/images/services/service-inspection.jpg",
+      imageUrl: "/images/services/service-inspection.webp",
       iconName: "ShieldCheck",
       conditions:
         "Exclusivo en el taller (requiere elevador hidráulico). No incluye rectificación ni cambio de discos si presentan desgaste severo.",
@@ -395,7 +395,7 @@ async function main() {
       isAvailableWorkshop: true,
       isAvailableHome: true,
       requiresLift: false,
-      imageUrl: "/images/services/service-inspection.jpg",
+      imageUrl: "/images/services/service-inspection.webp",
       iconName: "BatteryCharging",
       conditions: "Disponible tanto en el taller como mediante unidad móvil.",
       sortOrder: 7,
@@ -412,7 +412,7 @@ async function main() {
       isAvailableWorkshop: true,
       isAvailableHome: true,
       requiresLift: false,
-      imageUrl: "/images/services/service-diagnostics.jpg",
+      imageUrl: "/images/services/service-diagnostics.webp",
       iconName: "BatteryFull",
       conditions:
         "Precio referencial para batería estándar; modelos AGM o de alta capacidad pueden variar previa aprobación del cliente. Garantía del fabricante.",
@@ -430,7 +430,7 @@ async function main() {
       isAvailableWorkshop: true,
       isAvailableHome: false,
       requiresLift: true,
-      imageUrl: "/images/workshop/workshop-branded.jpg",
+      imageUrl: "/images/workshop/workshop-branded.webp",
       iconName: "Thermometer",
       conditions:
         "Se realiza únicamente en el centro físico para garantizar manejo seguro y ambiental de fluidos.",
@@ -448,7 +448,7 @@ async function main() {
       isAvailableWorkshop: true,
       isAvailableHome: true,
       requiresLift: false,
-      imageUrl: "/images/services/service-diagnostics.jpg",
+      imageUrl: "/images/services/service-diagnostics.webp",
       iconName: "Cpu",
       conditions:
         "Diagnóstico preventivo básico. Si se detecta avería compleja de motor o transmisión, se orienta al cliente hacia un taller especializado.",
@@ -470,7 +470,7 @@ async function main() {
       slug: "esencial",
       name: "Esencial",
       monthlyPrice: 350, // + ITBIS = RD$413
-      annualPrice: 3800, // + ITBIS = RD$4,484
+      annualPrice: 3780, // + ITBIS = RD$4,460.40 (10% desc. exacto por 12 meses)
       description:
         "Ideal para dueños de vehículos particulares que quieren organizar su mantenimiento en el centro con una cuota mensual accesible.",
       targetMode: "Centro",
@@ -497,7 +497,7 @@ async function main() {
       slug: "confort",
       name: "Confort",
       monthlyPrice: 600, // + ITBIS = RD$708
-      annualPrice: 6500, // + ITBIS = RD$7,670
+      annualPrice: 6480, // + ITBIS = RD$7,646.40 (10% desc. exacto por 12 meses)
       description:
         "Pensado para conductores frecuentes y familias con uso diario que buscan control completo y diagnóstico electrónico anual.",
       targetMode: "Centro",

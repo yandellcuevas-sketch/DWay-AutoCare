@@ -49,7 +49,7 @@ export default function EmpresasPage() {
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#F50923]" aria-hidden="true" />
-                    <span>10% de descuento base (y hasta 15% según volumen vehicular) y prioridad en agenda.</span>
+                    <span>10% de descuento en otros servicios aplicables y prioridad en citas.</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[#F50923]" aria-hidden="true" />
@@ -64,7 +64,7 @@ export default function EmpresasPage() {
 
               <figure className="overflow-hidden rounded-xl border border-gray-200 bg-white">
                 <img
-                  src="/images/mobile-service/mobile-unit-branded.jpg"
+                  src="/images/mobile-service/mobile-unit-branded.webp"
                   alt="Unidad móvil DWay AutoCare atendiendo vehículos en sede empresarial"
                   className="aspect-video w-full object-cover"
                 />

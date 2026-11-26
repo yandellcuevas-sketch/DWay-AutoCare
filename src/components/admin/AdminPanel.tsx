@@ -350,7 +350,7 @@ export function AdminPanel() {
             {/* 1. INICIO (DASHBOARD) */}
             {section === "inicio" && dashData && (
               <div className="space-y-6">
-                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+                <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-5">
                   {[
                     { label: "Citas hoy", val: dashData.kpis.todayAppointments },
                     { label: "Pendientes", val: dashData.kpis.pendingCount, highlight: true },
