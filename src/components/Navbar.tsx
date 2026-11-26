@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { AnimatePresence, motion } from "framer-motion";
 import { useSession, signOut } from "next-auth/react";
 import {
   Menu,
@@ -139,9 +140,14 @@ export function Navbar() {
       </div>
 
       {/* Mobile Drawer */}
+      <AnimatePresence>
       {mobileOpen && (
-        <nav
+        <motion.nav
           id="mobile-nav-drawer"
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -6 }}
+          transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
           aria-label="Menú móvil"
           className="border-t border-gray-200 bg-white px-4 py-4 lg:hidden"
         >
@@ -210,8 +216,9 @@ export function Navbar() {
               )}
             </div>
           </div>
-        </nav>
+        </motion.nav>
       )}
+      </AnimatePresence>
     </header>
 
     {showBottomNav && (

@@ -165,8 +165,9 @@ async function runAudit() {
     await page.fill("#na-num", "24");
     await page.fill("#na-ref", "Parqueo frontal");
     await page.click('button:has-text("Guardar y usar esta dirección")');
-    await page.waitForSelector("text=En cobertura", { timeout: 10000 });
+    await page.waitForSelector("text=Residencia Naco", { timeout: 10000 });
     await page.click('button:has-text("Siguiente paso")');
+    await page.waitForSelector("text=Paso 4.", { timeout: 10000 });
 
     const dayButtons = page.locator("section button:not([disabled])").filter({ hasText: /^\d{1,2}$/ });
     const countDays = await dayButtons.count();
@@ -307,7 +308,7 @@ async function runAudit() {
       const backupCheck = await page.evaluate(async () => {
         const r = await fetch("/api/admin/backup");
         const buf = await r.arrayBuffer();
-        const hdr = new TextDecoder().decode(new Uint8Array(buf.slice(0, 64)));
+        const hdr = new TextDecoder().decode(new Uint8Array(buf.slice(0, 128)));
         return { status: r.status, hdr, bytes: buf.byteLength };
       });
       assert(

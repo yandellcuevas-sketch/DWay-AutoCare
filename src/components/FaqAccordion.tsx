@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { ChevronDown } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
 
 const FAQ_ITEMS = [
   {
@@ -26,7 +27,7 @@ const FAQ_ITEMS = [
   },
   {
     q: "¿Cómo funcionan los planes de membresía?",
-    a: "Cada membresía (Esencial, Confort y Premium Domicilio) aplica por vehículo registrado, con pago mensual (permanencia mínima de 12 meses) o pago único anual con ahorro cercano al 10%. Los servicios incluidos se agendan por cita previa y no se acumulan de un año a otro.",
+    a: "Cada membresía (Esencial, Confort y Premium Domicilio) aplica por vehículo registrado, con pago mensual (permanencia mínima de 12 meses) o pago único anual con ahorro exacto del 10%. Los servicios incluidos se agendan por cita previa y no se acumulan de un año a otro.",
   },
 ];
 
@@ -34,18 +35,21 @@ export function FaqAccordion() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
-    <div className="divide-y divide-gray-200 rounded-xl border border-gray-200 bg-white">
+    <div className="divide-y divide-gray-200 overflow-hidden rounded-xl border border-gray-200 bg-white shadow-xs">
       {FAQ_ITEMS.map((item, idx) => {
         const isOpen = openIndex === idx;
         return (
-          <div key={item.q} className="p-5 sm:p-6">
+          <div
+            key={item.q}
+            className="p-5 transition-colors duration-150 hover:bg-[#FAFAFA]/80 sm:p-6"
+          >
             <h3 className="text-base font-bold text-[#1E2127]">
               <button
                 type="button"
                 aria-expanded={isOpen}
                 aria-controls={`faq-panel-${idx}`}
                 onClick={() => setOpenIndex(isOpen ? null : idx)}
-                className="flex min-h-[44px] w-full items-center justify-between gap-4 text-left font-bold text-[#1E2127] hover:text-[#F50923]"
+                className="flex min-h-[44px] w-full items-center justify-between gap-4 text-left font-bold text-[#1E2127] transition-colors hover:text-[#F50923]"
               >
                 <span>{item.q}</span>
                 <ChevronDown
@@ -56,13 +60,20 @@ export function FaqAccordion() {
                 />
               </button>
             </h3>
-            <div
-              id={`faq-panel-${idx}`}
-              hidden={!isOpen}
-              className="pt-3 text-sm leading-relaxed text-[#424750]"
-            >
-              {item.a}
-            </div>
+            <AnimatePresence initial={false}>
+              {isOpen && (
+                <motion.div
+                  id={`faq-panel-${idx}`}
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+                  className="overflow-hidden"
+                >
+                  <p className="pt-3 text-sm leading-relaxed text-[#424750]">{item.a}</p>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         );
       })}

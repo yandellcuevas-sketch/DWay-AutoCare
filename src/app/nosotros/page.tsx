@@ -45,7 +45,7 @@ const FOUNDERS = [
     bio: "Estudiante de Dirección Empresarial con concentración en Negocios Internacionales (PUCMM). Coordina la agenda del taller, unidad móvil, control de calidad y seguimiento al cliente.",
   },
   {
-    name: "Ángel Yandell Cuevas Mora",
+    name: "Angel Yandell Cuevas Mora",
     role: "Administración y Tecnología",
     bio: "Estudiante de Dirección Empresarial con concentración en Negocios Internacionales (PUCMM) y bachiller técnico en desarrollo de aplicaciones. Responsable de sistemas digitales, finanzas e historial vehicular.",
   },
@@ -75,12 +75,20 @@ export default function NosotrosPage() {
                 <strong>D</strong> de Daniel, <strong>W</strong> de Wesley, <strong>A</strong>{" "}
                 de «and» y <strong>Y</strong> de Yandell.
               </p>
-              <p className="text-sm leading-relaxed text-[#424750] sm:text-base">
-                Nuestra propuesta integra un centro físico de mantenimiento preventivo con
-                elevador hidráulico en el Distrito Nacional y una unidad móvil equipada para
-                acudir a tu casa, oficina o empresa, respaldados por técnicos calificados y
-                un jefe de taller experimentado.
-              </p>
+              <div className="grid gap-3 pt-1 sm:grid-cols-2">
+                <div className="rounded-xl border border-gray-200 bg-white p-3.5 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#424750]/50 hover:shadow-xs">
+                  <p className="text-xs font-bold uppercase tracking-wider text-[#F50923]">Centro Físico</p>
+                  <p className="mt-1 text-xs leading-relaxed text-[#424750]">
+                    Equipado con elevador hidráulico en el Distrito Nacional y técnicos calificados.
+                  </p>
+                </div>
+                <div className="rounded-xl border border-gray-200 bg-white p-3.5 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#424750]/50 hover:shadow-xs">
+                  <p className="text-xs font-bold uppercase tracking-wider text-[#1E2127]">Unidad Móvil</p>
+                  <p className="mt-1 text-xs leading-relaxed text-[#424750]">
+                    Atención preventiva en tu casa, oficina o empresa bajo supervisión técnica.
+                  </p>
+                </div>
+              </div>
               <div className="pt-2">
                 <Link
                   href="/agendar"
@@ -142,7 +150,7 @@ export default function NosotrosPage() {
                 {VALUES.map((v) => (
                   <div
                     key={v.name}
-                    className="rounded-xl border border-gray-200 bg-white p-5"
+                    className="rounded-xl border border-gray-200 bg-white p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#424750]/60 hover:shadow-md"
                   >
                     <h3 className="text-base font-bold text-[#1E2127]">{v.name}</h3>
                     <p className="mt-1.5 text-sm text-[#424750]">{v.desc}</p>
@@ -162,7 +170,7 @@ export default function NosotrosPage() {
                 {FOUNDERS.map((f) => (
                   <div
                     key={f.name}
-                    className="rounded-xl border border-gray-200 bg-white p-6"
+                    className="rounded-xl border border-gray-200 bg-white p-6 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#424750]/60 hover:shadow-md"
                   >
                     <h3 className="text-lg font-bold text-[#1E2127]">{f.name}</h3>
                     <p className="mt-1 text-xs font-bold uppercase tracking-wider text-[#F50923]">

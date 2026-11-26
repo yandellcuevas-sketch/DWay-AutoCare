@@ -102,7 +102,7 @@ export function MembershipCards({
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: "some" }}
               transition={{ duration: 0.25, delay: idx * 0.06 }}
-              className={`flex flex-col justify-between rounded-xl border bg-white p-6 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md sm:p-7 ${
+              className={`flex flex-col justify-between rounded-xl border bg-white p-5 sm:p-6 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:-translate-y-0.5 hover:shadow-md sm:p-7 ${
                 isFeatured
                   ? "border-2 border-[#F50923]"
                   : "border-gray-200 hover:border-[#424750]"
