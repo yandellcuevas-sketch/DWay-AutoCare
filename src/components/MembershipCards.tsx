@@ -12,9 +12,8 @@ import {
   ChevronDown,
   ChevronUp,
 } from "lucide-react";
-import { motion } from "framer-motion";
 import { formatDOP } from "@/lib/constants";
-import { AnimatedCollapse } from "./MotionPrimitives";
+import { AnimatedCollapse, StaggerGrid, StaggerItem } from "./MotionPrimitives";
 
 export interface PlanItem {
   id: string;
@@ -85,8 +84,8 @@ export function MembershipCards({
         </div>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-3">
-        {plans.map((plan, idx) => {
+      <StaggerGrid className="grid gap-6 lg:grid-cols-3">
+        {plans.map((plan) => {
           const benefits: string[] = JSON.parse(plan.benefits || "[]");
           const restrictions: string[] = JSON.parse(plan.restrictions || "[]");
           const base = cycle === "ANNUAL" ? plan.annualPrice : plan.monthlyPrice;
@@ -132,13 +131,9 @@ export function MembershipCards({
           );
 
           return (
-            <motion.article
-              key={plan.id}
-              initial={{ opacity: 0, y: 12 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: "some" }}
-              transition={{ duration: 0.25, delay: idx * 0.06 }}
-              className={`flex flex-col justify-between rounded-xl border bg-white p-5 sm:p-6 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:-translate-y-0.5 hover:shadow-md sm:p-7 ${
+            <StaggerItem key={plan.id} className="flex">
+            <article
+              className={`w-full flex flex-col justify-between rounded-xl border bg-white p-5 sm:p-6 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:-translate-y-0.5 hover:shadow-md sm:p-7 ${
                 isFeatured
                   ? "border-2 border-[#F50923]"
                   : "border-gray-200 hover:border-[#424750]"
@@ -219,10 +214,11 @@ export function MembershipCards({
                   <ArrowRight className="h-4 w-4" aria-hidden="true" />
                 </Link>
               </div>
-            </motion.article>
+            </article>
+            </StaggerItem>
           );
         })}
-      </div>
+      </StaggerGrid>
 
       {showComparison && plans.length > 0 && (
         <div className="mt-10 overflow-hidden rounded-2xl border border-gray-200 bg-white">
