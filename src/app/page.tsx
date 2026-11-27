@@ -23,6 +23,7 @@ import { ServiceCatalogGrid } from "@/components/ServiceCatalogGrid";
 import { MembershipCards } from "@/components/MembershipCards";
 import { CompanyInquiryForm } from "@/components/CompanyInquiryForm";
 import { FaqAccordion } from "@/components/FaqAccordion";
+import { CoverageZonesCollapsible } from "@/components/CoverageZonesCollapsible";
 import { DWayLogo } from "@/components/DWayLogo";
 import { HeroEntrance, RevealSection } from "@/components/MotionPrimitives";
 
@@ -537,44 +538,13 @@ export default async function HomePage() {
                 <p className="mt-1 text-xs text-[#424750]">
                   Sectores del Distrito Nacional sin recargo adicional y zonas extendidas con tarifa transparente de desplazamiento:
                 </p>
-                <div className="mt-4 hidden flex-wrap gap-2 md:flex">
-                  {zones.map((z) => (
-                    <span
-                      key={z.id}
-                      className={`inline-flex items-center gap-1 rounded-md border px-2.5 py-1 text-xs font-semibold ${
-                        Number(z.surchargeFee) > 0
-                          ? "border-amber-200 bg-amber-50 text-amber-900"
-                          : "border-gray-200 bg-[#FAFAFA] text-[#1E2127]"
-                      }`}
-                    >
-                      <MapPin className="h-3 w-3 text-[#F50923]" aria-hidden="true" />
-                      {z.sector}
-                      {Number(z.surchargeFee) > 0 && ` (+RD$${Number(z.surchargeFee)})`}
-                    </span>
-                  ))}
-                </div>
-                <details className="mt-3 rounded-lg border border-gray-200 bg-[#FAFAFA] p-3 md:hidden">
-                  <summary className="flex min-h-[40px] cursor-pointer items-center justify-between text-xs font-bold text-[#1E2127]">
-                    <span>Ver {zones.length} sectores cubiertos</span>
-                    <span className="text-[#F50923]">Desplegar</span>
-                  </summary>
-                  <div className="mt-3 flex flex-wrap gap-1.5">
-                    {zones.map((z) => (
-                      <span
-                        key={z.id}
-                        className={`inline-flex items-center gap-1 rounded-md border px-2 py-1 text-[11px] font-semibold ${
-                          Number(z.surchargeFee) > 0
-                            ? "border-amber-200 bg-amber-50 text-amber-900"
-                            : "border-gray-200 bg-white text-[#1E2127]"
-                        }`}
-                      >
-                        <MapPin className="h-3 w-3 text-[#F50923]" aria-hidden="true" />
-                        {z.sector}
-                        {Number(z.surchargeFee) > 0 && ` (+RD$${Number(z.surchargeFee)})`}
-                      </span>
-                    ))}
-                  </div>
-                </details>
+                <CoverageZonesCollapsible
+                  zones={zones.map((z) => ({
+                    id: z.id,
+                    sector: z.sector,
+                    surchargeFee: Number(z.surchargeFee),
+                  }))}
+                />
               </div>
             </div>
           </div>

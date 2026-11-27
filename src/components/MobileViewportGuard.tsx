@@ -69,6 +69,8 @@ export function MobileViewportGuard() {
       }
     };
 
+    const noopTouch = () => {};
+    document.addEventListener("touchstart", noopTouch, { passive: true });
     window.visualViewport?.addEventListener("resize", handleViewportResize);
     window.addEventListener("orientationchange", resetHorizontalDrift);
     document.addEventListener("focusin", handleFocusIn);
@@ -76,6 +78,7 @@ export function MobileViewportGuard() {
 
     return () => {
       if (focusBlurTimer) window.clearTimeout(focusBlurTimer);
+      document.removeEventListener("touchstart", noopTouch);
       window.visualViewport?.removeEventListener("resize", handleViewportResize);
       window.removeEventListener("orientationchange", resetHorizontalDrift);
       document.removeEventListener("focusin", handleFocusIn);

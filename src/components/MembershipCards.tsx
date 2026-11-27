@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { formatDOP } from "@/lib/constants";
+import { AnimatedCollapse } from "./MotionPrimitives";
 
 export interface PlanItem {
   id: string;
@@ -95,6 +96,41 @@ export function MembershipCards({
           );
           const isFeatured = plan.slug === "confort";
 
+          const planDetails = (
+            <>
+              <div className="mt-5">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-[#1E2127]">
+                  Beneficios incluidos por vehículo
+                </h4>
+                <ul className="mt-3 space-y-2.5">
+                  {benefits.map((b) => (
+                    <li key={b} className="flex items-start gap-2.5 text-sm text-[#1E2127]">
+                      <Check
+                        className="mt-0.5 h-4 w-4 shrink-0 text-[#F50923]"
+                        aria-hidden="true"
+                      />
+                      <span>{b}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="mt-5 border-t border-gray-100 pt-4">
+                <h4 className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#424750]">
+                  <Info className="h-3.5 w-3.5" aria-hidden="true" />
+                  Condiciones y restricciones
+                </h4>
+                <ul className="mt-2 space-y-1.5">
+                  {restrictions.map((r) => (
+                    <li key={r} className="text-xs text-[#424750]">
+                      • {r}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </>
+          );
+
           return (
             <motion.article
               key={plan.id}
@@ -162,38 +198,12 @@ export function MembershipCards({
                   )}
                 </button>
 
-                <div className={expandedPlans[plan.id] ? "block" : "hidden lg:block"}>
-                  <div className="mt-5">
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-[#1E2127]">
-                      Beneficios incluidos por vehículo
-                    </h4>
-                    <ul className="mt-3 space-y-2.5">
-                      {benefits.map((b) => (
-                        <li key={b} className="flex items-start gap-2.5 text-sm text-[#1E2127]">
-                          <Check
-                            className="mt-0.5 h-4 w-4 shrink-0 text-[#F50923]"
-                            aria-hidden="true"
-                          />
-                          <span>{b}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  <div className="mt-5 border-t border-gray-100 pt-4">
-                    <h4 className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#424750]">
-                      <Info className="h-3.5 w-3.5" aria-hidden="true" />
-                      Condiciones y restricciones
-                    </h4>
-                    <ul className="mt-2 space-y-1.5">
-                      {restrictions.map((r) => (
-                        <li key={r} className="text-xs text-[#424750]">
-                          • {r}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+                <div className="lg:hidden">
+                  <AnimatedCollapse isOpen={Boolean(expandedPlans[plan.id])}>
+                    {planDetails}
+                  </AnimatedCollapse>
                 </div>
+                <div className="hidden lg:block">{planDetails}</div>
               </div>
 
               <div className="mt-6 pt-2">

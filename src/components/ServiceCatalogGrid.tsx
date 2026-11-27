@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { ServiceIcon } from "./ServiceIcon";
 import { formatDOP } from "@/lib/constants";
+import { AnimatedCollapse } from "./MotionPrimitives";
 
 export interface CatalogService {
   id: string;
@@ -150,6 +151,22 @@ export function ServiceCatalogGrid({
           const homeWithTax =
             s.homePrice !== null ? Number((s.homePrice * (1 + itbisRate)).toFixed(2)) : null;
 
+          const detailsBlock = (
+            <>
+              <div className="mt-3 flex items-center gap-2 text-xs font-semibold text-[#424750]">
+                <Clock className="h-4 w-4 text-[#1E2127]" aria-hidden="true" />
+                <span>Duración estimada: {s.estimatedDuration} minutos</span>
+              </div>
+
+              {s.conditions && (
+                <p className="mt-3 flex items-start gap-1.5 text-xs text-[#424750]">
+                  <AlertCircle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#424750]" aria-hidden="true" />
+                  <span>{s.conditions}</span>
+                </p>
+              )}
+            </>
+          );
+
           return (
             <article
               key={s.id}
@@ -249,19 +266,12 @@ export function ServiceCatalogGrid({
                   )}
                 </button>
 
-                <div className={expandedIds[s.id] ? "block" : "hidden md:block"}>
-                  <div className="mt-3 flex items-center gap-2 text-xs font-semibold text-[#424750]">
-                    <Clock className="h-4 w-4 text-[#1E2127]" aria-hidden="true" />
-                    <span>Duración estimada: {s.estimatedDuration} minutos</span>
-                  </div>
-
-                  {s.conditions && (
-                    <p className="mt-3 flex items-start gap-1.5 text-xs text-[#424750]">
-                      <AlertCircle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#424750]" aria-hidden="true" />
-                      <span>{s.conditions}</span>
-                    </p>
-                  )}
+                <div className="md:hidden">
+                  <AnimatedCollapse isOpen={Boolean(expandedIds[s.id])}>
+                    {detailsBlock}
+                  </AnimatedCollapse>
                 </div>
+                <div className="hidden md:block">{detailsBlock}</div>
               </div>
 
               <div className="mt-5 pt-2">
