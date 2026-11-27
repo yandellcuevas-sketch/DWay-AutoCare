@@ -237,7 +237,7 @@ export function Navbar() {
               <motion.span
                 layoutId="mobileBottomActivePill"
                 transition={{ type: "spring", stiffness: 420, damping: 32 }}
-                className="absolute inset-x-3 top-0 h-0.5 rounded-full bg-[#F50923]"
+                className="pointer-events-none absolute inset-0.5 -z-10 rounded-xl border border-[#F50923]/20 bg-[#F50923]/10"
               />
             )}
             <Home className="h-5 w-5" aria-hidden="true" />
@@ -253,7 +253,7 @@ export function Navbar() {
               <motion.span
                 layoutId="mobileBottomActivePill"
                 transition={{ type: "spring", stiffness: 420, damping: 32 }}
-                className="absolute inset-x-3 top-0 h-0.5 rounded-full bg-[#F50923]"
+                className="pointer-events-none absolute inset-0.5 -z-10 rounded-xl border border-[#F50923]/20 bg-[#F50923]/10"
               />
             )}
             <Wrench className="h-5 w-5" aria-hidden="true" />
@@ -276,7 +276,7 @@ export function Navbar() {
               <motion.span
                 layoutId="mobileBottomActivePill"
                 transition={{ type: "spring", stiffness: 420, damping: 32 }}
-                className="absolute inset-x-3 top-0 h-0.5 rounded-full bg-[#F50923]"
+                className="pointer-events-none absolute inset-0.5 -z-10 rounded-xl border border-[#F50923]/20 bg-[#F50923]/10"
               />
             )}
             <Award className="h-5 w-5" aria-hidden="true" />
@@ -294,7 +294,7 @@ export function Navbar() {
               <motion.span
                 layoutId="mobileBottomActivePill"
                 transition={{ type: "spring", stiffness: 420, damping: 32 }}
-                className="absolute inset-x-3 top-0 h-0.5 rounded-full bg-[#F50923]"
+                className="pointer-events-none absolute inset-0.5 -z-10 rounded-xl border border-[#F50923]/20 bg-[#F50923]/10"
               />
             )}
             <User className="h-5 w-5" aria-hidden="true" />

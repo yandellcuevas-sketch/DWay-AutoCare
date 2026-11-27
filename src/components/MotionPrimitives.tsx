@@ -59,10 +59,10 @@ export function StepTransition({
     <AnimatePresence mode="wait" initial={false}>
       <motion.div
         key={stepKey}
-        initial={{ opacity: 0, y: 14 }}
+        initial={{ opacity: 0, y: 18 }}
         animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -10 }}
-        transition={{ duration: 0.22, ease: EASE_DWAY }}
+        exit={{ opacity: 0, y: -12 }}
+        transition={{ duration: 0.28, ease: EASE_DWAY }}
       >
         {children}
       </motion.div>
@@ -86,7 +86,7 @@ export function AnimatedCollapse({
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: "auto" }}
           exit={{ opacity: 0, height: 0 }}
-          transition={{ duration: 0.22, ease: EASE_DWAY }}
+          transition={{ height: { duration: 0.32, ease: EASE_DWAY }, opacity: { duration: 0.24 } }}
           className={`overflow-hidden ${className}`}
         >
           {children}
