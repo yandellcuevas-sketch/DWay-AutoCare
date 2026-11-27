@@ -165,12 +165,26 @@ export default async function HomePage() {
                 físico equipado con elevador hidráulico y una unidad móvil equipada para
                 atenderte en casa o en tu oficina.
               </p>
-              <p className="text-sm leading-relaxed text-[#424750] sm:text-base">
-                Trabajamos con listas de verificación técnica, precios claros antes de
-                autorizar cualquier trabajo, ventana estimada de llegada a domicilio de
-                +/- 1 hora, manejo ambiental responsable del aceite usado y un historial
-                digital por vehículo.
-              </p>
+              <div className="grid gap-3 pt-1 sm:grid-cols-3">
+                <div className="rounded-xl border border-gray-200 bg-[#FAFAFA] p-3.5 transition-all duration-200 hover:border-[#424750]/50">
+                  <p className="text-xs font-bold text-[#1E2127]">Checklist técnico</p>
+                  <p className="mt-1 text-xs leading-relaxed text-[#424750]">
+                    Precios claros antes de autorizar y manejo ambiental del aceite usado.
+                  </p>
+                </div>
+                <div className="rounded-xl border border-gray-200 bg-[#FAFAFA] p-3.5 transition-all duration-200 hover:border-[#424750]/50">
+                  <p className="text-xs font-bold text-[#F50923]">Ventana +/- 1 hora</p>
+                  <p className="mt-1 text-xs leading-relaxed text-[#424750]">
+                    Puntualidad estimada de llegada a domicilio sin esperas en taller.
+                  </p>
+                </div>
+                <div className="rounded-xl border border-gray-200 bg-[#FAFAFA] p-3.5 transition-all duration-200 hover:border-[#424750]/50">
+                  <p className="text-xs font-bold text-[#1E2127]">Historial digital</p>
+                  <p className="mt-1 text-xs leading-relaxed text-[#424750]">
+                    Expediente por vehículo con piezas mostradas y recordatorios.
+                  </p>
+                </div>
+              </div>
               <div className="flex flex-wrap gap-3 pt-1">
                 <Link
                   href="/nosotros"
@@ -275,7 +289,7 @@ export default async function HomePage() {
                 return (
                   <div
                     key={b.title}
-                    className="rounded-xl border border-gray-200 bg-[#FAFAFA] p-6"
+                    className="rounded-xl border border-gray-200 bg-[#FAFAFA] p-6 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#424750]/50 hover:shadow-md"
                   >
                     <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-lg bg-[#1E2127] text-white">
                       <Icon className="h-5 w-5 text-[#F50923]" aria-hidden="true" />
@@ -330,7 +344,7 @@ export default async function HomePage() {
               ].map((item) => (
                 <div
                   key={item.step}
-                  className="rounded-xl border border-[#424750]/60 bg-[#15171B] p-6"
+                  className="rounded-xl border border-[#424750]/60 bg-[#15171B] p-6 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#F50923]/60"
                 >
                   <span className="text-2xl font-extrabold text-[#F50923]">{item.step}</span>
                   <h3 className="mt-3 text-lg font-bold text-white">{item.title}</h3>

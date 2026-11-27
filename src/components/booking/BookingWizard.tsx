@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import {
@@ -146,6 +146,35 @@ export function BookingWizard({
 
   const [step, setStep] = useState(1);
   const [error, setError] = useState<string | null>(null);
+  const wizardTopRef = useRef<HTMLDivElement | null>(null);
+  const errorRef = useRef<HTMLDivElement | null>(null);
+  const prevStepRef = useRef(1);
+
+  useEffect(() => {
+    if (prevStepRef.current !== step) {
+      prevStepRef.current = step;
+      const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      window.requestAnimationFrame(() => {
+        wizardTopRef.current?.scrollIntoView({
+          behavior: reduced ? "auto" : "smooth",
+          block: "start",
+        });
+      });
+    }
+  }, [step]);
+
+  useEffect(() => {
+    if (error) {
+      const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      window.requestAnimationFrame(() => {
+        errorRef.current?.scrollIntoView({
+          behavior: reduced ? "auto" : "smooth",
+          block: "center",
+        });
+        errorRef.current?.focus({ preventScroll: true });
+      });
+    }
+  }, [error]);
 
   // Step 1: Vehicle
   const [vehicles, setVehicles] = useState<VehicleItem[]>([]);
@@ -546,7 +575,7 @@ export function BookingWizard({
 
   if (authStatus === "loading") {
     return (
-      <div className="rounded-xl border border-gray-200 bg-white p-10 text-center text-sm text-[#424750]">
+      <div data-scroll-target="primary" className="scroll-mt-24 rounded-xl border border-gray-200 bg-white p-10 text-center text-sm text-[#424750]">
         Cargando asistente de citas...
       </div>
     );
@@ -554,7 +583,7 @@ export function BookingWizard({
 
   if (authStatus === "unauthenticated") {
     return (
-      <div className="mx-auto max-w-xl rounded-2xl border border-gray-200 bg-white p-8 text-center">
+      <div data-scroll-target="primary" className="scroll-mt-24 mx-auto max-w-xl rounded-2xl border border-gray-200 bg-white p-8 text-center">
         <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-[#1E2127] text-[#F50923]">
           <Car className="h-7 w-7" aria-hidden="true" />
         </div>
@@ -587,7 +616,7 @@ export function BookingWizard({
   const selectedAddress = addresses.find((a) => a.id === selectedAddressId);
 
   return (
-    <div className="space-y-6">
+    <div ref={wizardTopRef} data-scroll-target="primary" className="space-y-6 scroll-mt-24 pb-8 md:pb-0">
       {/* Progress Indicator */}
       <nav aria-label="Progreso de reserva" className="rounded-xl border border-gray-200 bg-white p-3 sm:p-4">
         <div className="mb-2 flex items-center justify-between text-xs font-bold text-[#1E2127] sm:hidden">
@@ -636,6 +665,8 @@ export function BookingWizard({
 
       {error && (
         <div
+          ref={errorRef}
+          tabIndex={-1}
           role="alert"
           className="flex items-start gap-2.5 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800"
         >

@@ -139,7 +139,7 @@ async function main() {
       email: "admin@dwayautocare.do",
       passwordHash: adminPasswordHash,
       name: "Yandell Cuevas",
-      firstName: "Ángel Yandell",
+      firstName: "Angel Yandell",
       lastName: "Cuevas Mora",
       phone: "809-555-0101",
       role: "ADMIN",

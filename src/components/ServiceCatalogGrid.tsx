@@ -153,7 +153,7 @@ export function ServiceCatalogGrid({
           return (
             <article
               key={s.id}
-              className="flex flex-col justify-between rounded-xl border border-gray-200 bg-white p-6 transition-colors hover:border-[#424750]"
+              className="flex flex-col justify-between rounded-xl border border-gray-200 bg-white p-5 sm:p-6 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#424750]/60 hover:shadow-md"
             >
               <div>
                 <div className="mb-4 flex items-start justify-between gap-3">

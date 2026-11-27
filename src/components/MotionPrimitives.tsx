@@ -69,3 +69,29 @@ export function StepTransition({
     </AnimatePresence>
   );
 }
+
+export function AnimatedCollapse({
+  isOpen,
+  children,
+  className = "",
+}: {
+  isOpen: boolean;
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <AnimatePresence initial={false}>
+      {isOpen && (
+        <motion.div
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: "auto" }}
+          exit={{ opacity: 0, height: 0 }}
+          transition={{ duration: 0.22, ease: EASE_DWAY }}
+          className={`overflow-hidden ${className}`}
+        >
+          {children}
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
