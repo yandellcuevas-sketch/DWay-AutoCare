@@ -25,7 +25,7 @@ import { CompanyInquiryForm } from "@/components/CompanyInquiryForm";
 import { FaqAccordion } from "@/components/FaqAccordion";
 import { CoverageZonesCollapsible } from "@/components/CoverageZonesCollapsible";
 import { DWayLogo } from "@/components/DWayLogo";
-import { HeroEntrance, RevealSection } from "@/components/MotionPrimitives";
+import { HeroEntrance, RevealSection, StaggerGrid, StaggerItem } from "@/components/MotionPrimitives";
 
 export const dynamic = "force-dynamic";
 
@@ -202,7 +202,7 @@ export default async function HomePage() {
         {/* 3. CATÁLOGO DE SERVICIOS */}
         <section id="servicios" className="border-b border-gray-200 bg-[#FAFAFA] py-16">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="mb-10 max-w-3xl">
+            <RevealSection className="mb-10 max-w-3xl">
               <span className="inline-block rounded-md bg-[#1E2127] px-3 py-1 text-xs font-bold uppercase tracking-wider text-white">
                 Catálogo Preventivo
               </span>
@@ -213,7 +213,7 @@ export default async function HomePage() {
                 Especializados exclusivamente en mantenimiento preventivo para automóviles,
                 jeepetas y camionetas ligeras. Consulta tarifas transparentes por modalidad.
               </p>
-            </div>
+            </RevealSection>
 
             <ServiceCatalogGrid services={services} itbisRate={settings.itbisRate} />
 
@@ -244,16 +244,16 @@ export default async function HomePage() {
         {/* 4. BENEFICIOS DE ELEGIR DWAY AUTOCARE */}
         <section className="border-b border-gray-200 bg-white py-16">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="mb-10 max-w-2xl">
+            <RevealSection className="mb-10 max-w-2xl">
               <span className="inline-block rounded-md bg-[#F50923]/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-[#F50923]">
                 Nuestra Propuesta de Valor
               </span>
               <h2 className="mt-3 text-2xl font-extrabold text-[#1E2127] sm:text-3xl">
                 ¿Por qué elegir DWay AutoCare?
               </h2>
-            </div>
+            </RevealSection>
 
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <StaggerGrid className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {[
                 {
                   icon: CarFront,
@@ -288,9 +288,9 @@ export default async function HomePage() {
               ].map((b) => {
                 const Icon = b.icon;
                 return (
+                  <StaggerItem key={b.title}>
                   <div
-                    key={b.title}
-                    className="rounded-xl border border-gray-200 bg-[#FAFAFA] p-6 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#424750]/50 hover:shadow-md"
+                    className="h-full rounded-xl border border-gray-200 bg-[#FAFAFA] p-6 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#424750]/50 hover:shadow-md"
                   >
                     <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-lg bg-[#1E2127] text-white">
                       <Icon className="h-5 w-5 text-[#F50923]" aria-hidden="true" />
@@ -298,16 +298,17 @@ export default async function HomePage() {
                     <h3 className="text-lg font-bold text-[#1E2127]">{b.title}</h3>
                     <p className="mt-2 text-sm leading-relaxed text-[#424750]">{b.desc}</p>
                   </div>
+                  </StaggerItem>
                 );
               })}
-            </div>
+            </StaggerGrid>
           </div>
         </section>
 
         {/* 5. CÓMO FUNCIONA EL SERVICIO */}
         <section id="como-funciona" className="border-b border-[#424750]/20 bg-[#1E2127] py-16 text-white">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="mb-10 max-w-2xl">
+            <RevealSection className="mb-10 max-w-2xl">
               <span className="inline-block rounded-md bg-[#F50923] px-3 py-1 text-xs font-bold uppercase tracking-wider text-white">
                 Proceso Organizado
               </span>
@@ -318,9 +319,9 @@ export default async function HomePage() {
                 Desde la reserva digital hasta el control de calidad del jefe de taller y tu
                 comprobante descargable.
               </p>
-            </div>
+            </RevealSection>
 
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            <StaggerGrid className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
               {[
                 {
                   step: "01",
@@ -343,47 +344,54 @@ export default async function HomePage() {
                   desc: "El técnico completa el servicio, mostramos las piezas reemplazadas y recibes tu comprobante digital.",
                 },
               ].map((item) => (
+                <StaggerItem key={item.step}>
                 <div
-                  key={item.step}
                   className="rounded-xl border border-[#424750]/60 bg-[#15171B] p-6 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#F50923]/60"
                 >
                   <span className="text-2xl font-extrabold text-[#F50923]">{item.step}</span>
                   <h3 className="mt-3 text-lg font-bold text-white">{item.title}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-gray-300">{item.desc}</p>
                 </div>
+                </StaggerItem>
               ))}
-            </div>
+            </StaggerGrid>
 
-            <div className="mt-10 grid gap-6 md:grid-cols-3">
-              <div className="overflow-hidden rounded-xl border border-[#424750] bg-[#15171B]">
-                <img
-                  src="/images/services/service-oil.webp"
-                  alt="Cambio profesional de aceite sintético y filtro en DWay AutoCare"
-                  className="aspect-[4/3] w-full object-cover"
-                />
-              </div>
-              <div className="overflow-hidden rounded-xl border border-[#424750] bg-[#15171B]">
-                <img
-                  src="/images/services/service-inspection.webp"
-                  alt="Inspección de sistema de frenos, torque y prueba de batería"
-                  className="aspect-[4/3] w-full object-cover"
-                />
-              </div>
-              <div className="overflow-hidden rounded-xl border border-[#424750] bg-[#15171B]">
-                <img
-                  src="/images/services/service-diagnostics.webp"
-                  alt="Diagnóstico electrónico básico OBD-II y prueba digital de batería"
-                  className="aspect-[4/3] w-full object-cover"
-                />
-              </div>
-            </div>
+            <StaggerGrid className="mt-10 grid gap-6 md:grid-cols-3">
+              <StaggerItem>
+                <div className="overflow-hidden rounded-xl border border-[#424750] bg-[#15171B]">
+                  <img
+                    src="/images/services/service-oil.webp"
+                    alt="Cambio profesional de aceite sint?tico y filtro en DWay AutoCare"
+                    className="aspect-[4/3] w-full object-cover"
+                  />
+                </div>
+              </StaggerItem>
+              <StaggerItem>
+                <div className="overflow-hidden rounded-xl border border-[#424750] bg-[#15171B]">
+                  <img
+                    src="/images/services/service-inspection.webp"
+                    alt="Inspecci?n de sistema de frenos, torque y prueba de bater?a"
+                    className="aspect-[4/3] w-full object-cover"
+                  />
+                </div>
+              </StaggerItem>
+              <StaggerItem>
+                <div className="overflow-hidden rounded-xl border border-[#424750] bg-[#15171B]">
+                  <img
+                    src="/images/services/service-diagnostics.webp"
+                    alt="Diagn?stico electr?nico b?sico OBD-II y prueba digital de bater?a"
+                    className="aspect-[4/3] w-full object-cover"
+                  />
+                </div>
+              </StaggerItem>
+            </StaggerGrid>
           </div>
         </section>
 
         {/* 6. PLANES DE MEMBRESÍA */}
         <section id="membresias" className="border-b border-gray-200 bg-[#FAFAFA] py-16">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="mx-auto mb-10 max-w-3xl text-center">
+            <RevealSection className="mx-auto mb-10 max-w-3xl text-center">
               <span className="inline-flex items-center gap-1.5 rounded-md bg-[#F50923]/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-[#F50923]">
                 <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
                 Membresías por Vehículo
@@ -395,7 +403,7 @@ export default async function HomePage() {
                 Organiza el cuidado anual de tu vehículo con beneficios definidos, prioridad
                 en agenda, recordatorios y descuentos reales sin promesas engañosas.
               </p>
-            </div>
+            </RevealSection>
 
             <div className="mb-10 overflow-hidden rounded-2xl border border-gray-200 bg-white">
               <img
@@ -412,7 +420,7 @@ export default async function HomePage() {
         {/* 7. SERVICIOS EMPRESARIALES */}
         <section id="empresas" className="border-b border-gray-200 bg-white py-16">
           <div className="mx-auto grid max-w-7xl items-start gap-10 px-4 sm:px-6 lg:grid-cols-12 lg:px-8">
-            <div className="space-y-5 lg:col-span-5">
+            <RevealSection className="space-y-5 lg:col-span-5">
               <span className="inline-flex items-center gap-1.5 rounded-md bg-[#1E2127] px-3 py-1 text-xs font-bold uppercase tracking-wider text-white">
                 <Building2 className="h-3.5 w-3.5 text-[#F50923]" aria-hidden="true" />
                 Flotas Empresariales
@@ -463,7 +471,7 @@ export default async function HomePage() {
                   </li>
                 </ul>
               </div>
-            </div>
+            </RevealSection>
 
             <div className="lg:col-span-7">
               <CompanyInquiryForm />
@@ -474,14 +482,14 @@ export default async function HomePage() {
         {/* 8. PREGUNTAS FRECUENTES */}
         <section id="preguntas-frecuentes" className="border-b border-gray-200 bg-[#FAFAFA] py-16">
           <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-            <div className="mb-8 text-center">
+            <RevealSection className="mb-8 text-center">
               <span className="inline-block rounded-md bg-[#1E2127] px-3 py-1 text-xs font-bold uppercase tracking-wider text-white">
                 Preguntas Frecuentes
               </span>
               <h2 className="mt-3 text-2xl font-extrabold text-[#1E2127] sm:text-3xl">
                 Resolvemos tus dudas antes de agendar
               </h2>
-            </div>
+            </RevealSection>
 
             <FaqAccordion />
           </div>
@@ -490,7 +498,7 @@ export default async function HomePage() {
         {/* 9. INFORMACIÓN DE CONTACTO Y COBERTURA */}
         <section id="contacto" className="bg-white py-16">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="grid gap-8 rounded-2xl border border-gray-200 bg-[#FAFAFA] p-6 sm:p-10 lg:grid-cols-12">
+            <RevealSection className="grid gap-8 rounded-2xl border border-gray-200 bg-[#FAFAFA] p-6 sm:p-10 lg:grid-cols-12">
               <div className="space-y-4 lg:col-span-6">
                 <span className="inline-block rounded-md bg-[#F50923]/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-[#F50923]">
                   Cobertura y Atención
@@ -546,7 +554,7 @@ export default async function HomePage() {
                   }))}
                 />
               </div>
-            </div>
+            </RevealSection>
           </div>
         </section>
       </main>

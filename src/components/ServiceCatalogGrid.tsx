@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { ServiceIcon } from "./ServiceIcon";
 import { formatDOP } from "@/lib/constants";
-import { AnimatedCollapse } from "./MotionPrimitives";
+import { AnimatedCollapse, StaggerGrid, StaggerItem } from "./MotionPrimitives";
 
 export interface CatalogService {
   id: string;
@@ -145,7 +145,7 @@ export function ServiceCatalogGrid({
         </div>
       )}
 
-      <div className="grid gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <StaggerGrid className="grid gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3">
         {filtered.map((s) => {
           const workshopWithTax = Number((s.price * (1 + itbisRate)).toFixed(2));
           const homeWithTax =
@@ -168,8 +168,8 @@ export function ServiceCatalogGrid({
           );
 
           return (
+            <StaggerItem key={s.id} className="flex">
             <article
-              key={s.id}
               className="flex flex-col justify-between rounded-xl border border-gray-200 bg-white p-5 sm:p-6 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#424750]/60 hover:shadow-md"
             >
               <div>
@@ -284,9 +284,10 @@ export function ServiceCatalogGrid({
                 </Link>
               </div>
             </article>
+            </StaggerItem>
           );
         })}
-      </div>
+      </StaggerGrid>
     </div>
   );
 }

@@ -16,11 +16,64 @@ export function RevealSection({
 }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: "some" }}
-      transition={{ duration: 0.36, delay, ease: EASE_DWAY }}
+      viewport={{ once: true, amount: 0.12 }}
+      transition={{ duration: 0.42, delay, ease: EASE_DWAY }}
+      className={`dway-reveal ${className}`}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+export function StaggerGrid({
+  children,
+  className = "",
+  stagger = 0.095,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  stagger?: number;
+}) {
+  return (
+    <motion.div
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.1 }}
+      variants={{
+        hidden: {},
+        visible: {
+          transition: {
+            staggerChildren: stagger,
+          },
+        },
+      }}
       className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+export function StaggerItem({
+  children,
+  className = "",
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <motion.div
+      variants={{
+        hidden: { opacity: 0, y: 24 },
+        visible: {
+          opacity: 1,
+          y: 0,
+          transition: { duration: 0.4, ease: EASE_DWAY },
+        },
+      }}
+      className={`dway-reveal ${className}`}
     >
       {children}
     </motion.div>
@@ -40,8 +93,8 @@ export function HeroEntrance({
     <motion.div
       initial={{ opacity: 0, y: 14 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, delay, ease: EASE_DWAY }}
-      className={className}
+      transition={{ duration: 0.35, delay, ease: EASE_DWAY }}
+      className={`dway-reveal ${className}`}
     >
       {children}
     </motion.div>

@@ -48,6 +48,7 @@ export default function RootLayout({
         >
           Saltar al contenido principal
         </a>
+        <noscript><style>{".dway-reveal{opacity:1!important;transform:none!important;}"}</style></noscript>
         <Providers>{children}</Providers>
       </body>
     </html>
