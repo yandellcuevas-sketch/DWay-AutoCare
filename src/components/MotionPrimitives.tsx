@@ -16,10 +16,10 @@ export function RevealSection({
 }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 12 }}
+      initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: "some" }}
-      transition={{ duration: 0.28, delay, ease: EASE_DWAY }}
+      transition={{ duration: 0.36, delay, ease: EASE_DWAY }}
       className={className}
     >
       {children}
@@ -59,10 +59,10 @@ export function StepTransition({
     <AnimatePresence mode="wait" initial={false}>
       <motion.div
         key={stepKey}
-        initial={{ opacity: 0, y: 6 }}
+        initial={{ opacity: 0, y: 14 }}
         animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -4 }}
-        transition={{ duration: 0.18, ease: EASE_DWAY }}
+        exit={{ opacity: 0, y: -10 }}
+        transition={{ duration: 0.22, ease: EASE_DWAY }}
       >
         {children}
       </motion.div>

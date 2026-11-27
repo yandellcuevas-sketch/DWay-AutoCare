@@ -229,19 +229,33 @@ export function Navbar() {
         <div className="mx-auto grid max-w-md grid-cols-5 items-center gap-1">
           <Link
             href="/"
-            className={`flex min-h-[46px] flex-col items-center justify-center rounded-lg px-1 text-[11px] font-semibold transition-colors ${
+            className={`relative flex min-h-[46px] flex-col items-center justify-center rounded-lg px-1 text-[11px] font-semibold transition-all active:scale-95 ${
               pathname === "/" ? "text-[#F50923]" : "text-[#424750]"
             }`}
           >
+            {pathname === "/" && (
+              <motion.span
+                layoutId="mobileBottomActivePill"
+                transition={{ type: "spring", stiffness: 420, damping: 32 }}
+                className="absolute inset-x-3 top-0 h-0.5 rounded-full bg-[#F50923]"
+              />
+            )}
             <Home className="h-5 w-5" aria-hidden="true" />
             <span className="mt-0.5 truncate">Inicio</span>
           </Link>
           <Link
             href="/servicios"
-            className={`flex min-h-[46px] flex-col items-center justify-center rounded-lg px-1 text-[11px] font-semibold transition-colors ${
+            className={`relative flex min-h-[46px] flex-col items-center justify-center rounded-lg px-1 text-[11px] font-semibold transition-all active:scale-95 ${
               pathname.startsWith("/servicios") ? "text-[#F50923]" : "text-[#424750]"
             }`}
           >
+            {pathname.startsWith("/servicios") && (
+              <motion.span
+                layoutId="mobileBottomActivePill"
+                transition={{ type: "spring", stiffness: 420, damping: 32 }}
+                className="absolute inset-x-3 top-0 h-0.5 rounded-full bg-[#F50923]"
+              />
+            )}
             <Wrench className="h-5 w-5" aria-hidden="true" />
             <span className="mt-0.5 truncate">Servicios</span>
           </Link>
@@ -254,21 +268,35 @@ export function Navbar() {
           </Link>
           <Link
             href="/membresias"
-            className={`flex min-h-[46px] flex-col items-center justify-center rounded-lg px-1 text-[11px] font-semibold transition-colors ${
+            className={`relative flex min-h-[46px] flex-col items-center justify-center rounded-lg px-1 text-[11px] font-semibold transition-all active:scale-95 ${
               pathname.startsWith("/membresias") ? "text-[#F50923]" : "text-[#424750]"
             }`}
           >
+            {pathname.startsWith("/membresias") && (
+              <motion.span
+                layoutId="mobileBottomActivePill"
+                transition={{ type: "spring", stiffness: 420, damping: 32 }}
+                className="absolute inset-x-3 top-0 h-0.5 rounded-full bg-[#F50923]"
+              />
+            )}
             <Award className="h-5 w-5" aria-hidden="true" />
             <span className="mt-0.5 truncate">Planes</span>
           </Link>
           <Link
             href={status === "authenticated" ? accountHref : "/auth/login"}
-            className={`flex min-h-[46px] flex-col items-center justify-center rounded-lg px-1 text-[11px] font-semibold transition-colors ${
+            className={`relative flex min-h-[46px] flex-col items-center justify-center rounded-lg px-1 text-[11px] font-semibold transition-all active:scale-95 ${
               pathname.startsWith("/portal") || pathname.startsWith("/auth")
                 ? "text-[#F50923]"
                 : "text-[#424750]"
             }`}
           >
+            {(pathname.startsWith("/portal") || pathname.startsWith("/auth")) && (
+              <motion.span
+                layoutId="mobileBottomActivePill"
+                transition={{ type: "spring", stiffness: 420, damping: 32 }}
+                className="absolute inset-x-3 top-0 h-0.5 rounded-full bg-[#F50923]"
+              />
+            )}
             <User className="h-5 w-5" aria-hidden="true" />
             <span className="mt-0.5 truncate">
               {status === "authenticated" ? "Cuenta" : "Entrar"}

@@ -3,6 +3,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import { StepTransition } from "@/components/MotionPrimitives";
 import {
   CalendarPlus,
   Car,
@@ -742,7 +743,8 @@ export function ClientPortal({
           Cargando información de tu cuenta...
         </div>
       ) : (
-        <>
+        <StepTransition stepKey={activeTab}>
+          <div>
           {/* TAB 1: RESUMEN */}
           {activeTab === "resumen" && (
             <div className="grid gap-6 lg:grid-cols-12">
@@ -1796,7 +1798,8 @@ export function ClientPortal({
               </div>
             </div>
           )}
-        </>
+          </div>
+        </StepTransition>
       )}
 
       {/* NATIVE DIALOGS */}
