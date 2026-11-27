@@ -174,7 +174,7 @@ async function runAudit() {
     let booked = false;
     for (let i = Math.min(2, countDays - 1); i < countDays; i++) {
       await dayButtons.nth(i).click();
-      await page.waitForTimeout(450);
+      await page.waitForSelector("button:has-text('hasta ')", { timeout: 8000 }).catch(() => null);
       const slotButtons = page.locator("button:has-text('hasta ')");
       if ((await slotButtons.count()) > 0) {
         await slotButtons.first().click();

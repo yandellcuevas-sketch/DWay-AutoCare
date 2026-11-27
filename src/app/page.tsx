@@ -285,10 +285,10 @@ export default async function HomePage() {
                   title: "Garantía de 30 días",
                   desc: "Respaldamos la mano de obra durante 30 días y tramitamos la garantía de fabricante de baterías y piezas instaladas.",
                 },
-              ].map((b) => {
+              ].map((b, idx) => {
                 const Icon = b.icon;
                 return (
-                  <StaggerItem key={b.title}>
+                  <StaggerItem key={b.title} index={idx} columns={3}>
                   <div
                     className="h-full rounded-xl border border-gray-200 bg-[#FAFAFA] p-6 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#424750]/50 hover:shadow-md"
                   >
@@ -343,8 +343,8 @@ export default async function HomePage() {
                   title: "Control de calidad e historial",
                   desc: "El técnico completa el servicio, mostramos las piezas reemplazadas y recibes tu comprobante digital.",
                 },
-              ].map((item) => (
-                <StaggerItem key={item.step}>
+              ].map((item, idx) => (
+                <StaggerItem key={item.step} index={idx} columns={4}>
                 <div
                   className="rounded-xl border border-[#424750]/60 bg-[#15171B] p-6 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#F50923]/60"
                 >
@@ -357,7 +357,7 @@ export default async function HomePage() {
             </StaggerGrid>
 
             <StaggerGrid className="mt-10 grid gap-6 md:grid-cols-3">
-              <StaggerItem>
+              <StaggerItem index={0} columns={3}>
                 <div className="overflow-hidden rounded-xl border border-[#424750] bg-[#15171B]">
                   <img
                     src="/images/services/service-oil.webp"
@@ -366,7 +366,7 @@ export default async function HomePage() {
                   />
                 </div>
               </StaggerItem>
-              <StaggerItem>
+              <StaggerItem index={1} columns={3}>
                 <div className="overflow-hidden rounded-xl border border-[#424750] bg-[#15171B]">
                   <img
                     src="/images/services/service-inspection.webp"
@@ -375,7 +375,7 @@ export default async function HomePage() {
                   />
                 </div>
               </StaggerItem>
-              <StaggerItem>
+              <StaggerItem index={2} columns={3}>
                 <div className="overflow-hidden rounded-xl border border-[#424750] bg-[#15171B]">
                   <img
                     src="/images/services/service-diagnostics.webp"

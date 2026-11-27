@@ -16,10 +16,11 @@ export function RevealSection({
 }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 24 }}
+      initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.12 }}
-      transition={{ duration: 0.42, delay, ease: EASE_DWAY }}
+      viewport={{ once: true, amount: 0.15 }}
+      transition={{ duration: 0.7, delay, ease: "easeOut" }}
+      style={{ willChange: "opacity, transform" }}
       className={`dway-reveal ${className}`}
     >
       {children}
@@ -30,49 +31,33 @@ export function RevealSection({
 export function StaggerGrid({
   children,
   className = "",
-  stagger = 0.095,
 }: {
   children: React.ReactNode;
   className?: string;
   stagger?: number;
 }) {
-  return (
-    <motion.div
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, amount: 0.1 }}
-      variants={{
-        hidden: {},
-        visible: {
-          transition: {
-            staggerChildren: stagger,
-          },
-        },
-      }}
-      className={className}
-    >
-      {children}
-    </motion.div>
-  );
+  return <div className={className}>{children}</div>;
 }
 
 export function StaggerItem({
   children,
   className = "",
+  index = 0,
+  columns = 3,
 }: {
   children: React.ReactNode;
   className?: string;
+  index?: number;
+  columns?: number;
 }) {
+  const staggerDelay = (index % columns) * 0.15;
   return (
     <motion.div
-      variants={{
-        hidden: { opacity: 0, y: 24 },
-        visible: {
-          opacity: 1,
-          y: 0,
-          transition: { duration: 0.4, ease: EASE_DWAY },
-        },
-      }}
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.15 }}
+      transition={{ duration: 0.7, delay: staggerDelay, ease: "easeOut" }}
+      style={{ willChange: "opacity, transform" }}
       className={`dway-reveal ${className}`}
     >
       {children}

@@ -85,7 +85,7 @@ export function MembershipCards({
       </div>
 
       <StaggerGrid className="grid gap-6 lg:grid-cols-3">
-        {plans.map((plan) => {
+        {plans.map((plan, idx) => {
           const benefits: string[] = JSON.parse(plan.benefits || "[]");
           const restrictions: string[] = JSON.parse(plan.restrictions || "[]");
           const base = cycle === "ANNUAL" ? plan.annualPrice : plan.monthlyPrice;
@@ -131,7 +131,7 @@ export function MembershipCards({
           );
 
           return (
-            <StaggerItem key={plan.id} className="flex">
+            <StaggerItem key={plan.id} index={idx} columns={3} className="flex">
             <article
               className={`w-full flex flex-col justify-between rounded-xl border bg-white p-5 sm:p-6 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:-translate-y-0.5 hover:shadow-md sm:p-7 ${
                 isFeatured
